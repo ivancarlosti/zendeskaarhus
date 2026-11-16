@@ -1716,9 +1716,31 @@ ul {
 .article-body a:hover, .article-body a:active, .article-body a:focus {
   color: $hover_link_color;
 }
+.article-body p,
+.article-body pre,
+.article-body table {
+  margin: 0 0 20px;
+}
+.article-body h1,
+.article-body h2,
+.article-body h3,
+.article-body h4,
+.article-body h5,
+.article-body h6 {
+  margin: 32px 0 12px;
+}
+.article-body > :first-child {
+  margin-top: 0;
+}
+.article-body > :last-child {
+  margin-bottom: 0;
+}
 .article-body img {
   height: auto;
   max-width: 100%;
+}
+.article-body p > img {
+  margin: 12px 0;
 }
 .article-body p > img.image-style-align-left {
   float: left;
@@ -1738,7 +1760,7 @@ ul {
 }
 .article-body figure.image {
   display: table;
-  margin: 0 auto;
+  margin: 24px auto;
 }
 .article-body figure.image.image-style-align-left {
   float: left;
@@ -1810,6 +1832,7 @@ ul {
   border-left: 1px solid #ddd;
   color: lighten($text_color, 20%);
   font-style: italic;
+  margin: 0 0 20px;
   padding: 0 15px;
 }
 .article-body > p:last-child {
@@ -2183,9 +2206,31 @@ ul {
 .comment-body a:hover, .comment-body a:active, .comment-body a:focus {
   color: $hover_link_color;
 }
+.comment-body p,
+.comment-body pre,
+.comment-body table {
+  margin: 0 0 20px;
+}
+.comment-body h1,
+.comment-body h2,
+.comment-body h3,
+.comment-body h4,
+.comment-body h5,
+.comment-body h6 {
+  margin: 32px 0 12px;
+}
+.comment-body > :first-child {
+  margin-top: 0;
+}
+.comment-body > :last-child {
+  margin-bottom: 0;
+}
 .comment-body img {
   height: auto;
   max-width: 100%;
+}
+.comment-body p > img {
+  margin: 12px 0;
 }
 .comment-body p > img.image-style-align-left {
   float: left;
@@ -2205,7 +2250,7 @@ ul {
 }
 .comment-body figure.image {
   display: table;
-  margin: 0 auto;
+  margin: 24px auto;
 }
 .comment-body figure.image.image-style-align-left {
   float: left;
@@ -2277,6 +2322,7 @@ ul {
   border-left: 1px solid #ddd;
   color: lighten($text_color, 20%);
   font-style: italic;
+  margin: 0 0 20px;
   padding: 0 15px;
 }
 .comment-body {
@@ -2756,9 +2802,31 @@ ul {
 .post-body a:hover, .post-body a:active, .post-body a:focus {
   color: $hover_link_color;
 }
+.post-body p,
+.post-body pre,
+.post-body table {
+  margin: 0 0 20px;
+}
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4,
+.post-body h5,
+.post-body h6 {
+  margin: 32px 0 12px;
+}
+.post-body > :first-child {
+  margin-top: 0;
+}
+.post-body > :last-child {
+  margin-bottom: 0;
+}
 .post-body img {
   height: auto;
   max-width: 100%;
+}
+.post-body p > img {
+  margin: 12px 0;
 }
 .post-body p > img.image-style-align-left {
   float: left;
@@ -2778,7 +2846,7 @@ ul {
 }
 .post-body figure.image {
   display: table;
-  margin: 0 auto;
+  margin: 24px auto;
 }
 .post-body figure.image.image-style-align-left {
   float: left;
@@ -2850,6 +2918,7 @@ ul {
   border-left: 1px solid #ddd;
   color: lighten($text_color, 20%);
   font-style: italic;
+  margin: 0 0 20px;
   padding: 0 15px;
 }
 .post-footer {
@@ -4777,9 +4846,31 @@ zd-summary-block {
 .service-catalog-description a:hover, .service-catalog-description a:active, .service-catalog-description a:focus {
   color: $hover_link_color;
 }
+.service-catalog-description p,
+.service-catalog-description pre,
+.service-catalog-description table {
+  margin: 0 0 20px;
+}
+.service-catalog-description h1,
+.service-catalog-description h2,
+.service-catalog-description h3,
+.service-catalog-description h4,
+.service-catalog-description h5,
+.service-catalog-description h6 {
+  margin: 32px 0 12px;
+}
+.service-catalog-description > :first-child {
+  margin-top: 0;
+}
+.service-catalog-description > :last-child {
+  margin-bottom: 0;
+}
 .service-catalog-description img {
   height: auto;
   max-width: 100%;
+}
+.service-catalog-description p > img {
+  margin: 12px 0;
 }
 .service-catalog-description p > img.image-style-align-left {
   float: left;
@@ -4799,7 +4890,7 @@ zd-summary-block {
 }
 .service-catalog-description figure.image {
   display: table;
-  margin: 0 auto;
+  margin: 24px auto;
 }
 .service-catalog-description figure.image.image-style-align-left {
   float: left;
@@ -4871,6 +4962,7 @@ zd-summary-block {
   border-left: 1px solid #ddd;
   color: lighten($text_color, 20%);
   font-style: italic;
+  margin: 0 0 20px;
   padding: 0 15px;
 }
 .service-catalog-main-content {

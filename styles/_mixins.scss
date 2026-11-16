@@ -91,19 +91,46 @@
 
   @include standalone-link;
 
+  // Typographic rhythm. `_reset.scss` drops the browser default margins on text
+  // elements, so every richtext container declares its own.
+  p,
+  pre,
+  table {
+    margin: 0 0 20px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 32px 0 12px;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
   img {
     height: auto;
     max-width: 100%;
   }
 
   p > img {
+    margin: 12px 0;
+
     @include image-alignment;
   }
 
   figure.image {
     display: table;
 
-    margin: 0 auto;
+    margin: 24px auto;
 
     @include image-alignment;
 
@@ -170,6 +197,7 @@
     border-left: 1px solid $low-contrast-border-color;
     color: $secondary-text-color;
     font-style: italic;
+    margin: 0 0 20px;
     padding: 0 15px;
   }
 }
