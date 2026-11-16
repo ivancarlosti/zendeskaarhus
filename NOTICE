@@ -1,0 +1,58 @@
+Aarhus
+Copyright 2026 Ivan Carlos
+
+This product includes software derived from the Copenhagen theme
+(https://github.com/zendesk/copenhagen_theme), Copyright Zendesk, Inc.,
+licensed under the Apache License, Version 2.0, and from CopenLight
+(https://github.com/ivancarlosti/copenlight), Copyright 2025-2026 Ivan Carlos
+de Almeida, also licensed under the Apache License, Version 2.0.
+
+See LICENSE for the full Apache License 2.0 text. Code written for Aarhus that
+is not derived from the projects above is additionally available under the MIT
+license, see LICENSES/MIT.txt. `docs/licensing.md` maps the derived files.
+
+Derived portions (Apache License 2.0):
+  * templates/*.hbs
+      Curlybars templates derived from the Copenhagen theme.
+  * styles/**
+      SCSS derived from the Copenhagen theme.
+  * src/**
+      Theme modules derived from the Copenhagen theme.
+  * translations/**
+      Locale files derived from the Copenhagen theme.
+  * settings/**
+      Default images and the injectable file defaults.
+
+Modifications made by Aarhus:
+  * manifest.json
+      Renamed the theme to "Aarhus", rebranded the palette and typography
+      defaults, and kept the logout_url, inject_script and inject_style
+      settings.
+  * templates/document_head.hbs
+      Exposes the palette to the Zendesk rich text editor through
+      data-hc-color-scheme and --hc-primary-color, and loads the generated
+      import map.
+  * templates/header.hbs
+      The sign-out link honours the logout_url setting, falling back to the
+      stock behaviour when the setting is empty.
+  * styles/
+      Aarhus palette and design tokens, plus a reset that replaces the archived
+      normalize.css.
+  * src/
+      React 18 roots (createRoot), styled-components 6 transient props,
+      i18next 27 / react-i18next 18, @zendesk/help-center-wysiwyg 2, and the
+      aarhus-theme-* translation key namespace.
+  * translations/**
+      The module translation keys were renamed from cph-theme-* to
+      aarhus-theme-*.
+  * build/
+      Rewritten build helpers: the Sass settings preamble and the import map
+      generator.
+  * settings/
+      Regenerated brand artwork (logo, favicon, backgrounds and hero image).
+
+Third-party components bundled into assets/*.js keep their own licenses:
+DOMPurify (Apache-2.0 / MPL-2.0), regenerator-runtime (MIT), CKEditor 5
+(GPL-2.0-or-later, consumed through @zendesk/help-center-wysiwyg), Zendesk
+Garden (Apache-2.0) and React (MIT). The build preserves the license banners of
+the minified bundles.
