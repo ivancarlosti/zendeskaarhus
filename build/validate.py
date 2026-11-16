@@ -13,8 +13,9 @@ Checks:
 2. Module locale files no longer contain the legacy `cph-theme-` namespace.
 3. The import map in `templates/document_head.hbs` maps exactly the bundles in
    `assets/`.
-4. `manifest.json` and `package.json` carry the same version and the theme is
-   named "Aarhus".
+4. `manifest.json` and `package.json` carry the same version, the theme is
+   named "Aarhus", and every `file` setting has a matching `settings/` asset
+   (Guide refuses to import the theme otherwise).
 5. No shipped file mentions the upstream brands.
 6. The chunks that embed third-party code keep their license notice.
 
@@ -123,6 +124,25 @@ def check_manifest(failures: list[str]) -> dict:
         failures.append(f"manifest name is {manifest['name']!r}, expected 'Aarhus'")
     if manifest["api_version"] != 4:
         failures.append("manifest api_version must be 4")
+
+    # Guide resolves a `file` setting to `settings/<identifier>.<ext>` (or to the
+    # explicit `value`) and aborts the import with "We were unable to find this
+    # file: settings/<identifier>" when the theme does not carry it. The lookup is
+    # by identifier stem, so the extension can be anything the setting accepts.
+    for group in manifest["settings"]:
+        for variable in group["variables"]:
+            if variable["type"] != "file":
+                continue
+            identifier = variable["identifier"]
+            candidates = glob.glob(f"settings/{identifier}.*")
+            candidates.append(f"settings/{identifier}")
+            if variable.get("value"):
+                candidates.append(variable["value"])
+            if not any(os.path.exists(path) for path in candidates):
+                failures.append(
+                    f"manifest.json: {identifier} is a file setting but "
+                    f"settings/{identifier}.* is missing — Guide rejects the upload"
+                )
 
     return manifest
 

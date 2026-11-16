@@ -81,8 +81,11 @@ python3 build/artwork.py
   stock Zendesk sign-out behaviour is used.
 - **Inject script.js** (`inject_script`) and **Inject style.css**
   (`inject_style`) — optional files loaded on every page by
-  `templates/document_head.hbs`. Both settings are empty by default; upload a
-  file through Theme Customization to enable them.
+  `templates/document_head.hbs`. Both are `file` settings, so Guide requires the
+  theme to carry `settings/inject_script.js` and `settings/inject_style.css`;
+  they ship as empty stubs and nothing is loaded until an admin uploads a file.
+  Removing them makes the theme fail to import with *"We were unable to find
+  this file: settings/inject_script"*.
 
 ## Sample customisations
 
@@ -98,6 +101,9 @@ part of the theme (so they travel with the release zip) and you can upload them
 Rename the file to `style.css` / `script.js` before uploading — Theming Center
 validates the extension — and keep the `!important` declarations: they have to
 win over `style.css`, which loads first.
+
+`sample/` only holds examples: the files Guide looks for are the stubs in
+`settings/`, and both must stay in the theme.
 
 ## Translations
 

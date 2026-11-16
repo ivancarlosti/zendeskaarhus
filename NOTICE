@@ -21,7 +21,7 @@ Derived portions (Apache License 2.0):
   * translations/**
       Locale files derived from the Copenhagen theme.
   * settings/**
-      Default images.
+      Default images and the injectable file defaults.
   * sample/*.example
       Ready-made customisations carried over from CopenLight.
 
