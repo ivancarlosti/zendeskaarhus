@@ -21,13 +21,14 @@ Derived portions (Apache License 2.0):
   * translations/**
       Locale files derived from the Copenhagen theme.
   * settings/**
-      Default images and the injectable file defaults.
+      Default images.
+  * sample/*.example
+      Ready-made customisations carried over from CopenLight.
 
 Modifications made by Aarhus:
   * manifest.json
-      Renamed the theme to "Aarhus", rebranded the palette and typography
-      defaults, and kept the logout_url, inject_script and inject_style
-      settings.
+      Renamed the theme to "Aarhus", kept the CopenLight palette defaults, and
+      kept the logout_url, inject_script and inject_style settings.
   * templates/document_head.hbs
       Exposes the palette to the Zendesk rich text editor through
       data-hc-color-scheme and --hc-primary-color, and loads the generated
@@ -49,7 +50,8 @@ Modifications made by Aarhus:
       Rewritten build helpers: the Sass settings preamble and the import map
       generator.
   * settings/
-      Regenerated brand artwork (logo, favicon, backgrounds and hero image).
+      Regenerated brand artwork (logo, favicon, backgrounds and hero image)
+      using the CopenLight palette.
 
 Third-party components bundled into assets/*.js keep their own licenses:
 DOMPurify (Apache-2.0 / MPL-2.0), regenerator-runtime (MIT), CKEditor 5

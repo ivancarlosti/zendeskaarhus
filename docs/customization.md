@@ -8,14 +8,17 @@ or `src/`.
 
 | Setting | Default | Notes |
 | --- | --- | --- |
-| `brand_color` | `#0B4F6C` | Aarhus harbour blue; also feeds `--hc-primary-color` for the rich text editor |
-| `brand_text_color` | `#FFFFFF` | text on brand-coloured buttons |
-| `text_color` | `#25303B` | body copy |
-| `link_color` | `#0B6E8A` | 4.9:1 on the default background |
-| `hover_link_color` | `#07313F` | hover/active links |
-| `visited_link_color` | `#6B4E8E` | visited links |
-| `background_color` | `#FBF9F4` | sand white; `$primary-shade` / `$secondary-shade` derive from it |
+| `brand_color` | `#17494D` | CopenLight teal; also feeds `--hc-primary-color` for the rich text editor |
+| `brand_text_color` | `#FFFFFF` | text on brand-coloured buttons (10.0:1 on `brand_color`) |
+| `text_color` | `#2F3941` | body copy (11.8:1 on white) |
+| `link_color` | `#1F73B7` | 5.0:1 on the default background |
+| `hover_link_color` | `#0F3554` | hover/active links (12.7:1) |
+| `visited_link_color` | `#9358B0` | visited links (4.9:1) |
+| `background_color` | `#FFFFFF` | `$primary-shade` / `$secondary-shade` derive from it |
 | `heading_font`, `text_font` | system stack | no web fonts are requested, so there is no third-party call |
+
+These are the CopenLight defaults. `build/artwork.py` mirrors the same values, so
+changing a colour means regenerating the artwork as well.
 
 Changing a colour in the manifest changes both `style.css` (through the Sass
 preamble) and the React modules (through `createTheme`, which feeds Garden).
@@ -78,8 +81,23 @@ python3 build/artwork.py
   stock Zendesk sign-out behaviour is used.
 - **Inject script.js** (`inject_script`) and **Inject style.css**
   (`inject_style`) — optional files loaded on every page by
-  `templates/document_head.hbs`. `settings/inject_script.js` and
-  `settings/inject_style.css` are the shipped defaults.
+  `templates/document_head.hbs`. Both settings are empty by default; upload a
+  file through Theme Customization to enable them.
+
+## Sample customisations
+
+`sample/` ships the two files CopenLight uses as ready-made examples. They are
+part of the theme (so they travel with the release zip) and you can upload them
+**as-is** to the `inject_script` and `inject_style` settings:
+
+| File | What it does |
+| --- | --- |
+| `sample/style.css.example` | Hides social blocks and article votes, widens the article container to 1300px with a 260px sidebar, styles tables and code blocks, and sets the Segoe UI stack. |
+| `sample/script.js.example` | Adds a "copy" button with a clipboard icon to every `<pre>` block on the page. |
+
+Rename the file to `style.css` / `script.js` before uploading — Theming Center
+validates the extension — and keep the `!important` declarations: they have to
+win over `style.css`, which loads first.
 
 ## Translations
 

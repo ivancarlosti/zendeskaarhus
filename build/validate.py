@@ -132,6 +132,7 @@ def check_branding(failures: list[str]) -> None:
         glob.glob("templates/*")
         + glob.glob("styles/*")
         + glob.glob("settings/*")
+        + glob.glob("sample/*")
         + glob.glob("translations/*")
         + glob.glob("assets/*")
         + ["manifest.json", "style.css", "script.js"]

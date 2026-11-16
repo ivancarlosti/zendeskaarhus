@@ -27,12 +27,15 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
-# Aarhus palette. `HARBOUR` matches the `brand_color` default in manifest.json.
-HARBOUR = (11, 79, 108)
-DEEP = (7, 49, 63)
-TEAL = (28, 122, 140)
-SAND = (242, 232, 217)
-BRICK = (180, 86, 63)
+# CopenLight palette — every value mirrors a `manifest.json` default:
+# BRAND is `brand_color`, INK `hover_link_color`, ACCENT `link_color`,
+# HIGHLIGHT `visited_link_color` and SURFACE the neutral panel tone used by
+# `sample/style.css.example`. Change both files together.
+BRAND = (23, 73, 77)  # #17494D
+INK = (15, 53, 84)  # #0F3554
+ACCENT = (31, 115, 183)  # #1F73B7
+HIGHLIGHT = (147, 88, 176)  # #9358B0
+SURFACE = (241, 245, 249)  # #F1F5F9
 WHITE = (255, 255, 255)
 
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
@@ -89,7 +92,7 @@ def centered_text(
 
 
 def skyline(draw: ImageDraw.ImageDraw, size: tuple[int, int], colour) -> None:
-    """Draws an abstract harbour skyline along the bottom edge."""
+    """Draws an abstract skyline along the bottom edge."""
     width, height = size
     blocks = [
         (0.02, 0.34, 0.55),
@@ -134,7 +137,7 @@ def waves(
 def monogram_mark(
     size: int, background: tuple, glyph_colour, padding: float
 ) -> Image.Image:
-    """Square logo mark: rounded harbour tile with an "a" monogram."""
+    """Square logo mark: rounded brand tile with an "a" monogram."""
     canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(canvas)
 
@@ -146,7 +149,7 @@ def monogram_mark(
         fill=background,
     )
 
-    # Harbour waves under the monogram.
+    # Wave bands under the monogram.
     band_top = int(size * 0.68)
     for index in range(3):
         y = band_top + index * int(size * 0.07)
@@ -169,42 +172,42 @@ def monogram_mark(
 
 
 def build_logo() -> None:
-    monogram_mark(470, HARBOUR, WHITE, padding=0.06).save(
+    monogram_mark(470, BRAND, WHITE, padding=0.06).save(
         ROOT / "settings" / "logo.png"
     )
 
 
 def build_favicon() -> None:
-    monogram_mark(128, HARBOUR, WHITE, padding=0.02).save(
+    monogram_mark(128, BRAND, WHITE, padding=0.02).save(
         ROOT / "settings" / "favicon.png"
     )
 
 
 def build_homepage_background() -> None:
     size = (2000, 419)
-    canvas = horizontal_gradient(size, HARBOUR, TEAL)
+    canvas = horizontal_gradient(size, BRAND, ACCENT)
     draw = ImageDraw.Draw(canvas)
-    skyline(draw, size, mix(DEEP, HARBOUR, 0.35))
-    waves(draw, size, mix(TEAL, WHITE, 0.35), count=3)
+    skyline(draw, size, mix(INK, BRAND, 0.35))
+    waves(draw, size, mix(ACCENT, WHITE, 0.35), count=3)
     canvas.save(ROOT / "settings" / "homepage_background_image.jpg", quality=88)
 
 
 def build_community_background() -> None:
     size = (2000, 417)
-    canvas = horizontal_gradient(size, DEEP, HARBOUR)
+    canvas = horizontal_gradient(size, INK, BRAND)
     draw = ImageDraw.Draw(canvas)
-    waves(draw, size, mix(HARBOUR, TEAL, 0.6), count=4)
+    waves(draw, size, mix(BRAND, ACCENT, 0.6), count=4)
     canvas.save(ROOT / "settings" / "community_background_image.jpg", quality=88)
 
 
 def build_community_image() -> None:
     size = (1162, 302)
-    canvas = Image.new("RGB", size, SAND)
+    canvas = Image.new("RGB", size, SURFACE)
     draw = ImageDraw.Draw(canvas)
 
     # Brick accent bar keeps the banner from reading as a flat block.
-    draw.rectangle([0, size[1] - 14, size[0], size[1]], fill=BRICK)
-    draw.rounded_rectangle([64, 58, 214, 208], radius=28, fill=HARBOUR)
+    draw.rectangle([0, size[1] - 14, size[0], size[1]], fill=HIGHLIGHT)
+    draw.rounded_rectangle([64, 58, 214, 208], radius=28, fill=BRAND)
     draw.text(
         (139, 133),
         "a",
@@ -213,13 +216,13 @@ def build_community_image() -> None:
         anchor="mm",
     )
     draw.text(
-        (256, 110), "aarhus", font=font(FONT_BOLD, 68), fill=HARBOUR, anchor="lm"
+        (256, 110), "aarhus", font=font(FONT_BOLD, 68), fill=BRAND, anchor="lm"
     )
     draw.text(
         (258, 178),
         "Help Center theme",
         font=font(FONT_REGULAR, 34),
-        fill=mix(HARBOUR, SAND, 0.35),
+        fill=mix(BRAND, SURFACE, 0.35),
         anchor="lm",
     )
     canvas.save(ROOT / "settings" / "community_image.jpg", quality=90)
@@ -227,12 +230,12 @@ def build_community_image() -> None:
 
 def build_service_catalog_hero() -> None:
     size = (3162, 640)
-    canvas = diagonal_gradient(size, DEEP, TEAL)
+    canvas = diagonal_gradient(size, INK, ACCENT)
     draw = ImageDraw.Draw(canvas)
-    waves(draw, size, mix(TEAL, WHITE, 0.25), count=5)
+    waves(draw, size, mix(ACCENT, WHITE, 0.25), count=5)
     draw.ellipse(
         [size[0] * 0.62, -size[1] * 0.55, size[0] * 1.02, size[1] * 0.75],
-        fill=mix(TEAL, SAND, 0.18),
+        fill=mix(ACCENT, SURFACE, 0.18),
     )
     canvas.save(
         ROOT / "settings" / "service_catalog_hero_image.jpg", quality=86
@@ -241,10 +244,10 @@ def build_service_catalog_hero() -> None:
 
 def build_thumbnail() -> None:
     size = (768, 630)
-    canvas = diagonal_gradient(size, HARBOUR, DEEP).convert("RGBA")
+    canvas = diagonal_gradient(size, BRAND, INK).convert("RGBA")
     draw = ImageDraw.Draw(canvas)
 
-    waves(draw, size, mix(HARBOUR, WHITE, 0.16), count=4)
+    waves(draw, size, mix(BRAND, WHITE, 0.16), count=4)
     centered_text(
         canvas, "aarhus", font(FONT_BOLD, 148), WHITE, 236, letter_spacing=6
     )
@@ -252,12 +255,12 @@ def build_thumbnail() -> None:
         canvas,
         "HELP CENTER THEME",
         font(FONT_REGULAR, 26),
-        mix(WHITE, HARBOUR, 0.35),
+        mix(WHITE, BRAND, 0.35),
         336,
         letter_spacing=10,
     )
 
-    swatches = [HARBOUR, TEAL, BRICK, SAND]
+    swatches = [BRAND, ACCENT, HIGHLIGHT, SURFACE]
     swatch_size = 54
     gap = 18
     total = len(swatches) * swatch_size + (len(swatches) - 1) * gap
@@ -267,7 +270,7 @@ def build_thumbnail() -> None:
             [x, 428, x + swatch_size, 428 + swatch_size],
             radius=12,
             fill=colour,
-            outline=mix(WHITE, HARBOUR, 0.55),
+            outline=mix(WHITE, BRAND, 0.55),
             width=2,
         )
         x += swatch_size + gap

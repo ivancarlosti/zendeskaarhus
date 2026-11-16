@@ -48,6 +48,7 @@ See [docs/setup.md](docs/setup.md) for the full walkthrough.
 | `src/` | Theme JavaScript (`script.js`) and React modules |
 | `assets/` | Built module bundles, referenced through the import map |
 | `settings/` | Default logo, favicon and background artwork |
+| `sample/` | CopenLight's ready-made `style.css.example` and `script.js.example` |
 | `translations/` | Theme locale files (`en-us.json`, …) |
 | `build/` | Build helpers: Sass preamble, import map, artwork generator |
 | `docs/` | Setup, customisation, testing and licensing documentation |
@@ -56,7 +57,8 @@ See [docs/setup.md](docs/setup.md) for the full walkthrough.
 ## Documentation
 
 - [Setup](docs/setup.md) — install, build, preview and deploy.
-- [Customisation](docs/customization.md) — palette, artwork, injected files.
+- [Customisation](docs/customization.md) — palette, artwork, injected files and
+  the files in `sample/`.
 - [Testing](docs/testing.md) — the Jest/TypeScript setup and conventions.
 - [Licensing](docs/licensing.md) — provenance, Apache-2.0 and MIT scope.
 
