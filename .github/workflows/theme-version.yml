@@ -1,0 +1,122 @@
+name: 🔢 Theme Version
+
+# Zendesk Guide only imports a theme whose `manifest.json` version is strict
+# SemVer 2.0.0 and higher than the version the help center already runs:
+#
+#   Incorrect theme version number
+#   The imported theme version number is not allowed. ...
+#
+# This workflow keeps that field honest: it validates the version on every
+# change and, on demand, stamps the next one into `manifest.json`,
+# `package.json` and `package-lock.json` on main.
+
+on:
+  pull_request:
+    paths:
+      - 'manifest.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'build/version.mjs'
+      - '.github/workflows/theme-version.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'manifest.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'build/version.mjs'
+      - '.github/workflows/theme-version.yml'
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'SemVer component to bump on main before importing the theme by hand'
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: read
+
+concurrency:
+  group: theme-version-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: ✅ Validate manifest version
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v7
+        with:
+          # Tags record which versions were already released, and therefore
+          # which ones Guide already has.
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: 🔢 Check version
+        run: node build/version.mjs check
+
+  bump:
+    name: ⬆️ Bump manifest version
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: 🔢 Bump version
+        id: bump
+        run: |
+          node build/version.mjs bump "${{ inputs.bump }}"
+          VERSION="$(node build/version.mjs current)"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: 💾 Commit & push
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          if git diff --quiet; then
+            echo "::notice title=Nothing to commit::manifest.json is already at ${VERSION}."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # [skip ci]: the bump itself must not start another validation run.
+          git commit -am "chore(release): bump theme version to ${VERSION} [skip ci]"
+          git push origin HEAD:main
+
+      - name: 📝 Summary
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          {
+            echo "### Manifest version: ${VERSION}"
+            echo
+            echo "\`manifest.json\`, \`package.json\` and \`package-lock.json\`"
+            echo "are on \`${VERSION}\`, which is safe to import into Zendesk Guide."
+          } >> "$GITHUB_STEP_SUMMARY"

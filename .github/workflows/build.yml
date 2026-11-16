@@ -128,6 +128,30 @@ jobs:
             echo "TAGS_EOF"
           } >> "$GITHUB_OUTPUT"
 
+      - name: 🟢 Setup Node.js (version gate)
+        if: steps.rebuild.outputs.proceed == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: 🔢 Verify the manifest version matches the release
+        if: steps.rebuild.outputs.proceed == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # Guide only imports a theme whose manifest version is strict SemVer
+          # 2.0.0 and higher than the version already installed; a package whose
+          # manifest still carries an older version fails with "Incorrect theme
+          # version number". Gate the artefact here instead of shipping it.
+          #
+          # Scheduled rebuilds repackage an existing tag, which may predate this
+          # gate, so they report the mismatch without failing.
+          FLAGS=""
+          if [ "${GITHUB_EVENT_NAME}" = "schedule" ]; then
+            FLAGS="--warn-only"
+          fi
+          node build/version.mjs verify-release "${VERSION}" ${FLAGS}
+
       - name: 📦 Create ZIP package
         if: steps.rebuild.outputs.proceed == 'true' && github.event_name != 'schedule'
         run: |

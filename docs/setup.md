@@ -60,12 +60,26 @@ npx zcli themes:publish --path .         # make it the live theme
 `zcli` needs the theme's `manifest.json` to be valid: `name`, `author`,
 `version` and `api_version` (4) are read from it on upload.
 
+Guide additionally refuses a package whose `version` is not strict SemVer
+2.0.0 or not higher than the version already installed ("Incorrect theme
+version number"). Bump it before re-uploading:
+
+```bash
+npm run version:bump -- patch     # 1.2.3 -> 1.2.4, keeps package.json in sync
+npx zcli themes:update --path .
+```
+
+See [versioning.md](versioning.md) for the full rules, the `THEME_CURRENT_VERSION`
+override and how the release workflows stamp the manifest.
+
 ## Theme package
 
-`semantic-release` (`.github/workflows/semantic-release.yml`) zips the build
-output and bumps `manifest.json` together with `package.json`, so the manifest
-version and the package version always match. Locally you can reproduce the zip
-with:
+`🚀 Semantic Release` (`.github/workflows/semantic-release.yml`) stamps
+`manifest.json`, `package.json` and `package-lock.json` with the released
+version *before* tagging, so the tag and the theme package always agree.
+`🐳 Build Artifacts` (`.github/workflows/build.yml`) then zips the tree and
+uploads it to the GitHub Release; it verifies the manifest version first.
+Locally you can reproduce the zip with:
 
 ```bash
 npm run build
@@ -79,8 +93,11 @@ Before pushing:
 ```bash
 npm run typecheck        # tsc --noEmit
 npm test                 # Jest 30 with ts-jest
+npm run version:check    # strict SemVer 2.0.0, manifest == package.json
 npm run build            # must be reproducible from a clean checkout
+npm run validate         # build/validate.py, includes the version gate
 ```
 
-The CI workflow (`.github/workflows/build.yml`) runs the same commands and
-fails on a dirty build output.
+The CI workflows (`.github/workflows/build.yml` and
+`.github/workflows/theme-version.yml`) run the same checks and fail on a dirty
+build output or on a manifest version Guide would reject.

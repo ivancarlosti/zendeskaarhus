@@ -1,6 +1,6 @@
 {
   "name": "aarhus-theme",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "Aarhus — a modern, accessible Zendesk Help Center theme",
   "license": "Apache-2.0",
   "author": "Ivan Carlos",
@@ -18,6 +18,9 @@
     "test": "TZ=UTC jest",
     "test:watch": "TZ=UTC jest --watch",
     "validate": "python3 build/validate.py",
+    "version:check": "node build/version.mjs check",
+    "version:bump": "node build/version.mjs bump",
+    "version:set": "node build/version.mjs set",
     "artwork": "python3 build/artwork.py",
     "zcli": "zcli"
   },

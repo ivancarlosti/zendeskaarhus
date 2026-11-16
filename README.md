@@ -50,13 +50,15 @@ See [docs/setup.md](docs/setup.md) for the full walkthrough.
 | `settings/` | Default logo, favicon and background artwork |
 | `sample/` | CopenLight's ready-made `style.css.example` and `script.js.example` |
 | `translations/` | Theme locale files (`en-us.json`, …) |
-| `build/` | Build helpers: Sass preamble, import map, artwork generator |
+| `build/` | Build helpers: Sass preamble, import map, artwork generator, manifest version stamping |
 | `docs/` | Setup, customisation, testing and licensing documentation |
 | `plans/` | Implementation plans for larger changes |
 
 ## Documentation
 
 - [Setup](docs/setup.md) — install, build, preview and deploy.
+- [Versioning](docs/versioning.md) — SemVer rules Guide enforces and how
+  releases stamp `manifest.json`.
 - [Customisation](docs/customization.md) — palette, artwork, injected files and
   the files in `sample/`.
 - [Testing](docs/testing.md) — the Jest/TypeScript setup and conventions.

@@ -13,9 +13,10 @@ Checks:
 2. Module locale files no longer contain the legacy `cph-theme-` namespace.
 3. The import map in `templates/document_head.hbs` maps exactly the bundles in
    `assets/`.
-4. `manifest.json` and `package.json` carry the same version, the theme is
-   named "Aarhus", and every `file` setting has a matching `settings/` asset
-   (Guide refuses to import the theme otherwise).
+4. `manifest.json` and `package.json` carry the same, strict SemVer 2.0.0
+   version (Guide rejects anything else), the theme is named "Aarhus", and
+   every `file` setting has a matching `settings/` asset (Guide refuses to
+   import the theme otherwise).
 5. No shipped file mentions the upstream brands.
 6. The chunks that embed third-party code keep their license notice.
 
@@ -120,6 +121,18 @@ def check_manifest(failures: list[str]) -> dict:
             "manifest.json and package.json versions differ "
             f"({manifest['version']} != {package['version']})"
         )
+
+    # Guide imports a theme only when the version is strict SemVer 2.0.0
+    # (MAJOR.MINOR.PATCH) and higher than the installed one; anything else
+    # fails with "Incorrect theme version number".
+    semver = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
+    for path, data in (("manifest.json", manifest), ("package.json", package)):
+        if not semver.match(str(data.get("version", ""))):
+            failures.append(
+                f"{path}: {data.get('version')!r} is not a strict SemVer 2.0.0 "
+                "version (MAJOR.MINOR.PATCH, no 'v' prefix, no pre-release)"
+            )
+
     if manifest["name"] != "Aarhus":
         failures.append(f"manifest name is {manifest['name']!r}, expected 'Aarhus'")
     if manifest["api_version"] != 4:

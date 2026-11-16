@@ -74,6 +74,12 @@ jobs:
           echo "tag=${PRIOR_TAG}" >> "$GITHUB_OUTPUT"
           echo "Newest tag reachable from HEAD before this run: ${PRIOR_TAG:-<none>}"
 
+      - name: 🟢 Setup Node.js (manual release)
+        if: inputs.version != ''
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
       - name: 🏷️ Manual release — create tag & GitHub Release
         if: inputs.version != ''
         env:
@@ -85,13 +91,34 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Tags are the record of what was released already (and therefore of
+          # what the help center has). This job checks out with fetch-depth 1,
+          # which fetches no tags, so pull them in before build/version.mjs
+          # compares the requested version against them.
+          git fetch --tags --force --quiet
+
           # Collect the files whose version was changed so they can be staged later.
           FILES_TO_ADD=""
 
-          # 1. manifest.json — generic JSON manifest.
+          # 1. manifest.json + package.json + package-lock.json — the Zendesk
+          #    theme version. Guide only imports a theme whose manifest version
+          #    is strict SemVer 2.0.0 (no `v` prefix, no pre-release suffix) and
+          #    higher than the version already installed, so build/version.mjs
+          #    validates the requested value, refuses one that is older than the
+          #    newest released tag, and stamps all three files at once.
           if [ -f manifest.json ]; then
-            sed -i "s/\"version\": \".*\"/\"version\": \"${VERSION}\"/" manifest.json
-            FILES_TO_ADD="${FILES_TO_ADD} manifest.json"
+            node build/version.mjs set "${VERSION}"
+            for FILE in manifest.json package.json package-lock.json; do
+              if [ -f "${FILE}" ]; then
+                FILES_TO_ADD="${FILES_TO_ADD} ${FILE}"
+              fi
+            done
+          # Repositories without a theme manifest (plain npm packages) keep the
+          # previous behaviour: the helper reads manifest.json, so stamp the
+          # package metadata directly.
+          elif [ -f package.json ]; then
+            sed -i "s/\"version\": \".*\"/\"version\": \"${VERSION}\"/" package.json
+            FILES_TO_ADD="${FILES_TO_ADD} package.json"
           fi
 
           # 2. composer.json — Composer/PHP projects.
@@ -100,13 +127,7 @@ jobs:
             FILES_TO_ADD="${FILES_TO_ADD} composer.json"
           fi
 
-          # 3. package.json — Node.js projects.
-          if [ -f package.json ]; then
-            sed -i "s/\"version\": \".*\"/\"version\": \"${VERSION}\"/" package.json
-            FILES_TO_ADD="${FILES_TO_ADD} package.json"
-          fi
-
-          # 4. Plugin file — WordPress (" * Version:") or YOURLS ("Version:") header.
+          # 3. Plugin file — WordPress (" * Version:") or YOURLS ("Version:") header.
           PLUGIN_FILE=$(grep -l 'Plugin Name:' *.php 2>/dev/null | head -n 1)
           if [ -n "${PLUGIN_FILE}" ]; then
             # WordPress plugin header style: " * Version: 1.0.0"
@@ -119,7 +140,7 @@ jobs:
             FILES_TO_ADD="${FILES_TO_ADD} ${PLUGIN_FILE}"
           fi
 
-          # 5. WordPress.org readme.txt Stable tag (only when present).
+          # 4. WordPress.org readme.txt Stable tag (only when present).
           if [ -f readme.txt ]; then
             sed -i "s/^Stable tag: .*/Stable tag: ${VERSION}/" readme.txt
             FILES_TO_ADD="${FILES_TO_ADD} readme.txt"
@@ -222,11 +243,21 @@ jobs:
             @semantic-release/github@^9 \
             @semantic-release/changelog@^6
 
-      - name: 🔧 Ensure valid branch config
+      - name: 🔧 Ensure release plugins & branch config
         if: inputs.version == ''
         env:
           RELEASE_BRANCH: ${{ steps.branch.outputs.default_branch }}
         run: |
+          # semantic-release tags a release but does not touch manifest.json on
+          # its own: every Zendesk package then shipped whatever version the
+          # tree happened to have, and Guide refused the import with
+          # "Incorrect theme version number ... higher than the current
+          # version".
+          #
+          # @semantic-release/exec stamps manifest.json/package.json with
+          # ${nextRelease.version} during `prepare` (before the tag exists) and
+          # @semantic-release/git commits the stamped files, so the tag, the
+          # GitHub Release and the theme package always agree.
           node -e "
             const fs = require('fs');
             let config;
@@ -243,10 +274,37 @@ jobs:
               };
               console.log('No .releaserc found — generating default config.');
             }
+            const name = (plugin) => (Array.isArray(plugin) ? plugin[0] : plugin);
+            const plugins = (config.plugins ?? []).filter(
+              (plugin) => !['@semantic-release/exec', '@semantic-release/git'].includes(name(plugin))
+            );
+            const managed = [
+              ['@semantic-release/exec', {
+                prepareCmd: 'node build/version.mjs set \${nextRelease.version}'
+              }],
+              ['@semantic-release/git', {
+                assets: ['manifest.json', 'package.json', 'package-lock.json'],
+                message: 'chore(release): \${nextRelease.version} [skip ci]\n\n\${nextRelease.notes}'
+              }]
+            ];
+            // Keep the publish step (@semantic-release/github) last.
+            const github = plugins.findIndex((plugin) => name(plugin) === '@semantic-release/github');
+            config.plugins = github === -1
+              ? [...plugins, ...managed]
+              : [...plugins.slice(0, github), ...managed, ...plugins.slice(github)];
             config.branches = [process.env.RELEASE_BRANCH];
             fs.writeFileSync('.releaserc', JSON.stringify(config, null, 2) + '\n');
             console.log('Release branch configured:', process.env.RELEASE_BRANCH);
+            console.log('Release plugins:', config.plugins.map(name).join(', '));
           "
+
+      - name: 👤 Configure git identity
+        if: inputs.version == ''
+        run: |
+          # @semantic-release/git commits the version-stamped manifest; git
+          # refuses to commit without an author.
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: 🚀 Run semantic-release
         if: inputs.version == ''
