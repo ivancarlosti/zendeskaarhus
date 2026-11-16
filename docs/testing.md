@@ -82,6 +82,10 @@ production bundles.
   (48 files still use the legacy import system). They are non-fatal; migrating
   to `@use` / `@forward` is tracked separately because it changes the Sass
   cascade for every partial at once.
+- Dart Sass ≥ 1.77.7 no longer hoists declarations above a nested `@media`
+  block, which is why `styles/` puts declarations before breakpoint includes;
+  `npm run validate` enforces it (`docs/setup.md`, gate 7). Dart Sass also
+  emits a `mixed-decls` deprecation warning for the reverse order.
 - React logs `act(...)` warnings if a test mounts an entry point outside
   `act()`; wrap those calls in `await act(async () => { ... })` so the root is
   committed before assertions run.

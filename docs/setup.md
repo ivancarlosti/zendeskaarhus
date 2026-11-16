@@ -41,6 +41,48 @@ The 12 bundle names are part of the theme contract
 bundle for the four modules that ship their own). Templates and the import map
 reference them by name — do not rename a chunk without updating both.
 
+## Sass ordering: declare first, nest afterwards
+
+`styles/` is mobile-first: the base rule holds the small-screen values and the
+`@include tablet` / `@include desktop` blocks add the wider-screen ones. Every
+rule must still list its **declarations before its nested blocks**:
+
+```scss
+.blocks-item {
+  margin: 0 0 30px;
+  padding: 20px;
+
+  @include tablet {
+    margin: 0 15px 30px;
+  }
+
+  &:hover {
+    background-color: $brand_color;
+  }
+}
+```
+
+Dart Sass 1.77.7 changed mixed-declaration handling: a nested `@media` block is
+now emitted **where it appears in the source** instead of after the surrounding
+declarations. The order above therefore compiles to the intended cascade, while
+the reverse order (the pre-2024 Zendesk themes write `@include tablet { … }`
+first) compiles to
+
+```css
+@media (min-width: 768px) { .blocks-item { margin: 0 15px 30px } }
+.blocks-item { margin: 0 0 30px }
+```
+
+where the base declaration wins at every width and the responsive rule is dead.
+The same rule applies to `@include max-width-container` and to
+`@include content-body`, whose declarations land in the calling rule: put the
+declarations first and the include last.
+
+`npm run validate` fails on any `@media` block that directly precedes base
+declarations for the same selector (gate 7 in `build/validate.py`); the three
+allowlisted pairs are the ones the upstream theme emits too and only touch
+properties the breakpoint does not.
+
 ## Watch mode
 
 ```bash
@@ -95,7 +137,8 @@ npm run typecheck        # tsc --noEmit
 npm test                 # Jest 30 with ts-jest
 npm run version:check    # strict SemVer 2.0.0, manifest == package.json
 npm run build            # must be reproducible from a clean checkout
-npm run validate         # build/validate.py, includes the version gate
+npm run validate         # build/validate.py: locales, import map, manifest,
+                         # branding, notices, version and Sass cascade order
 ```
 
 The CI workflows (`.github/workflows/build.yml` and

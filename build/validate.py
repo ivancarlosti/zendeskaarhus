@@ -19,6 +19,9 @@ Checks:
    import the theme otherwise).
 5. No shipped file mentions the upstream brands.
 6. The chunks that embed third-party code keep their license notice.
+7. `style.css` declares before it nests: a rule may not place a `@media` block
+   before declarations for the same selector, because Dart Sass >= 1.77.7 no
+   longer hoists those declarations (the allowlisted upstream cases aside).
 
 Exits with status 1 and prints the failures when a gate does not hold.
 """
@@ -51,6 +54,25 @@ THIRD_PARTY_CHUNKS = (
 )
 
 BINARY_SUFFIXES = (".png", ".jpg", ".jpeg", ".ico", ".gif", ".woff", ".woff2")
+
+# Dart Sass >= 1.77.7 emits a nested `@media` block where it appears in the
+# source instead of hoisting the declarations that follow it, so a rule written
+# as `@include tablet { … }` plus base declarations compiles to
+#
+#     @media (min-width: 768px) { .x { margin: 0 15px } }
+#     .x { margin: 0 0 30px }
+#
+# and the responsive value never applies. Rules must therefore declare first and
+# nest afterwards (see docs/setup.md). The three pairs kept here compile the same
+# way in the upstream theme and are harmless: the declarations after the media
+# block touch properties the breakpoint does not (`color`/`display` vs
+# `text-decoration`/`padding`, `order`/`position` vs `padding`, `font-size` vs
+# `width`).
+KNOWN_INVERSIONS = frozenset({
+    ".collapsible-nav-list li a",
+    ".collapsible-nav-list li[aria-selected=true]",
+    ".recent-activity-item-link",
+})
 
 
 def check_locales(failures: list[str]) -> tuple[list[str], list[str], int]:
@@ -190,6 +212,73 @@ def check_third_party_notices(failures: list[str]) -> None:
             failures.append(f"{path}: third-party notice was stripped")
 
 
+def css_blocks(css: str) -> list[tuple[str, str]]:
+    """Split a stylesheet into (header, body) pairs, at any nesting depth."""
+    blocks: list[tuple[str, str]] = []
+    depth = 0
+    start = 0
+    header = ""
+    body_start = 0
+
+    for index, char in enumerate(css):
+        if char == "{":
+            if depth == 0:
+                header = css[start:index].strip()
+                body_start = index + 1
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                blocks.append((header, css[body_start:index]))
+                start = index + 1
+
+    return blocks
+
+
+def check_style_order(failures: list[str]) -> int:
+    """Gate 7: a rule may not be emitted as `@media` block + base declarations.
+
+    Dart Sass >= 1.77.7 keeps declarations in source order, so a rule written
+    mobile-first (`@include tablet { … }` first, base declarations after)
+    compiles to a media block immediately followed by the base rule for the same
+    selector. The base declaration then wins at every width and the responsive
+    rule is dead.
+    """
+    css = re.sub(r"/\*.*?\*/", "", open("style.css", encoding="utf-8").read(), flags=re.DOTALL)
+    blocks = css_blocks(css)
+    inversions: set[str] = set()
+
+    for index in range(1, len(blocks)):
+        header, _body = blocks[index]
+        previous_header, previous_body = blocks[index - 1]
+        if header.startswith("@") or not previous_header.startswith("@media"):
+            continue
+
+        responsive = {
+            " ".join(selector.split())
+            for nested_header, _ in css_blocks(previous_body)
+            for selector in nested_header.split(",")
+            if selector.strip()
+        }
+        base = {" ".join(selector.split()) for selector in header.split(",") if selector.strip()}
+        shared = responsive & base
+        if shared:
+            inversions.add(min(shared))
+
+    for selector in sorted(inversions - KNOWN_INVERSIONS):
+        failures.append(
+            f"style.css: the @media block of {selector!r} directly precedes its "
+            "base declarations — declare first, nest afterwards"
+        )
+    for selector in sorted(KNOWN_INVERSIONS - inversions):
+        failures.append(
+            f"style.css: {selector!r} is in KNOWN_INVERSIONS but is no longer "
+            "inverted — remove it from the allowlist"
+        )
+
+    return len(inversions)
+
+
 def main() -> int:
     failures: list[str] = []
 
@@ -198,6 +287,7 @@ def main() -> int:
     manifest = check_manifest(failures)
     check_branding(failures)
     check_third_party_notices(failures)
+    inversion_count = check_style_order(failures)
 
     print(
         f"locales: {len(theme_locales)} theme ({base_keys} base keys), "
@@ -208,6 +298,7 @@ def main() -> int:
         f"manifest: {manifest.get('name')} {manifest.get('version')} "
         f"(api {manifest.get('api_version')})"
     )
+    print(f"style: {inversion_count} media-block inversions, all allowlisted")
 
     if failures:
         print("FAILURES:")
