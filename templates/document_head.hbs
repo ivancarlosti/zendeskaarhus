@@ -1,0 +1,55 @@
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<!--
+  Shares the Aarhus palette with the Zendesk rich text editor, which reads the
+  colour scheme from `data-hc-color-scheme` and the accent from the
+  `--hc-primary-color` custom property on the document element.
+-->
+<script type="text/javascript">
+  (function () {
+    var root = document.documentElement;
+    root.setAttribute("data-hc-color-scheme", "light");
+    root.style.setProperty("--hc-primary-color", {{json settings.brand_color}});
+  })();
+</script>
+<!-- Make the translated search clear button label available for use in JS -->
+<!-- See buildClearSearchButton() in script.js -->
+<script type="text/javascript">window.searchClearButtonLabelLocalized = "{{t 'search_clear'}}";</script>
+<script type="text/javascript">
+  // Load ES module polyfill only for browsers that don't support ES modules
+  if (!(HTMLScriptElement.supports && HTMLScriptElement.supports('importmap'))) {
+    document.write('<script async src="{{asset 'es-module-shims.js'}}"><\/script>');
+  }
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "approval-requests": "{{asset 'approval-requests-bundle.js'}}",
+    "flash-notifications": "{{asset 'flash-notifications-bundle.js'}}",
+    "new-request-form": "{{asset 'new-request-form-bundle.js'}}",
+    "request-list": "{{asset 'request-list-bundle.js'}}",
+    "service-catalog": "{{asset 'service-catalog-bundle.js'}}",
+    "shared": "{{asset 'shared-bundle.js'}}",
+    "ticket-fields": "{{asset 'ticket-fields-bundle.js'}}",
+    "wysiwyg": "{{asset 'wysiwyg-bundle.js'}}",
+    "approval-requests-translations": "{{asset 'approval-requests-translations-bundle.js'}}",
+    "new-request-form-translations": "{{asset 'new-request-form-translations-bundle.js'}}",
+    "request-list-translations": "{{asset 'request-list-translations-bundle.js'}}",
+    "service-catalog-translations": "{{asset 'service-catalog-translations-bundle.js'}}"
+  }
+}
+</script>
+<script type="module">
+  import { renderFlashNotifications } from "flash-notifications";
+
+  const settings = {{json settings}};
+  const baseLocale = {{json help_center.base_locale}};
+  const locale = {{json help_center.locale}};
+
+  renderFlashNotifications(settings, baseLocale, locale);
+</script>
+{{#if settings.inject_style}}
+  <link rel="stylesheet" href="{{settings.inject_style}}">
+{{/if}}
+{{#if settings.inject_script}}
+  <script src="{{settings.inject_script}}"></script>
+{{/if}}

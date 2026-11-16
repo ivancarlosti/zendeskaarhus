@@ -1,0 +1,482 @@
+import type { TicketFieldObject } from "../data-types/TicketFieldObject";
+import { act, fireEvent, screen, waitFor } from "@testing-library/react";
+import { MultiLookupField } from "./MultiLookupField";
+import { render } from "../../test/render";
+
+const defaultField: TicketFieldObject = {
+  id: 123,
+  name: "test_multi_lookup",
+  value: [],
+  error: null,
+  label: "Test Multi Lookup",
+  required: false,
+  description: "",
+  type: "multi_lookup",
+  options: [],
+  relationship_target_type: "zen:custom_object:testco",
+  relationship_filter: undefined,
+};
+
+const defaultProps = {
+  field: defaultField,
+  userId: 1,
+  organizationId: null,
+  onChange: jest.fn(),
+  visibleFields: [] as TicketFieldObject[],
+};
+
+describe("MultiLookupField", () => {
+  beforeEach(() => {
+    (globalThis.fetch as jest.Mock) = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            custom_object_records: [
+              { name: "Record A", id: "rec-a" },
+              { name: "Record B", id: "rec-b" },
+              { name: "Record C", id: "rec-c" },
+            ],
+          }),
+      })
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("renders the combobox with the correct label", () => {
+    render(<MultiLookupField {...defaultProps} />);
+    expect(screen.getByLabelText("Test Multi Lookup")).toBeInTheDocument();
+  });
+
+  it("fetches autocomplete results on focus", async () => {
+    render(<MultiLookupField {...defaultProps} />);
+
+    const combobox = screen.getByLabelText("Test Multi Lookup");
+    await act(async () => {
+      fireEvent.focus(combobox);
+    });
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "/api/v2/custom_objects/testco/records/autocomplete"
+      )
+    );
+  });
+
+  it("omits requester_id in autocomplete URL when userId is null (anonymous visitor)", async () => {
+    render(<MultiLookupField {...defaultProps} userId={null} />);
+
+    const combobox = screen.getByLabelText("Test Multi Lookup");
+    await act(async () => {
+      fireEvent.focus(combobox);
+    });
+
+    const url = (fetch as jest.Mock).mock.calls[0][0];
+    expect(url).not.toContain("requester_id");
+  });
+
+  it("includes requester_id in autocomplete URL when userId is a number", async () => {
+    render(<MultiLookupField {...defaultProps} />);
+
+    const combobox = screen.getByLabelText("Test Multi Lookup");
+    await act(async () => {
+      fireEvent.focus(combobox);
+    });
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("requester_id=1")
+    );
+  });
+
+  it("includes organization_id in autocomplete URL when provided", async () => {
+    render(<MultiLookupField {...defaultProps} organizationId="456" />);
+
+    const combobox = screen.getByLabelText("Test Multi Lookup");
+    await act(async () => {
+      fireEvent.focus(combobox);
+    });
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("organization_id=456")
+    );
+  });
+
+  it("renders hidden inputs for selected values", async () => {
+    (globalThis.fetch as jest.Mock) = jest.fn((url: string) => {
+      if (url.includes("/records?")) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              custom_object_records: [
+                { id: "rec-a", name: "Record A" },
+                { id: "rec-b", name: "Record B" },
+              ],
+            }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ custom_object_records: [] }),
+      });
+    });
+
+    const { container } = render(
+      <MultiLookupField
+        {...defaultProps}
+        field={{ ...defaultField, value: ["rec-a", "rec-b"] }}
+      />
+    );
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 0));
+    });
+
+    const hiddenInputs = container.querySelectorAll(
+      'input[type="hidden"][name="test_multi_lookup[]"]'
+    );
+    expect(hiddenInputs).toHaveLength(2);
+    expect(hiddenInputs[0]).toHaveValue("rec-a");
+    expect(hiddenInputs[1]).toHaveValue("rec-b");
+  });
+
+  it("renders no hidden inputs when no values are selected", () => {
+    const { container } = render(<MultiLookupField {...defaultProps} />);
+
+    const hiddenInputs = container.querySelectorAll(
+      'input[type="hidden"][name="test_multi_lookup[]"]'
+    );
+    expect(hiddenInputs).toHaveLength(0);
+  });
+
+  it("adds an item when selecting an option from the dropdown", async () => {
+    const onChange = jest.fn();
+    const { container } = render(
+      <MultiLookupField {...defaultProps} onChange={onChange} />
+    );
+
+    const combobox = screen.getByLabelText("Test Multi Lookup");
+    await act(async () => {
+      fireEvent.click(combobox);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Record A")).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Record A"));
+    });
+
+    expect(onChange).toHaveBeenCalledWith(["rec-a"]);
+    const hiddenInputs = container.querySelectorAll(
+      'input[type="hidden"][name="test_multi_lookup[]"]'
+    );
+    expect(hiddenInputs).toHaveLength(1);
+    expect(hiddenInputs[0]).toHaveValue("rec-a");
+  });
+
+  it("removes an item when clicking the tag remove button", async () => {
+    (globalThis.fetch as jest.Mock) = jest.fn((url: string) => {
+      if (url.includes("/records?")) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              custom_object_records: [{ id: "rec-a", name: "Record A" }],
+            }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            custom_object_records: [
+              { name: "Record B", id: "rec-b" },
+              { name: "Record C", id: "rec-c" },
+            ],
+          }),
+      });
+    });
+
+    const onChange = jest.fn();
+    const { container } = render(
+      <MultiLookupField
+        {...defaultProps}
+        onChange={onChange}
+        field={{ ...defaultField, value: ["rec-a"] }}
+      />
+    );
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 0));
+    });
+
+    const removeButton = container.querySelector(
+      "[data-garden-id='tags.tag_close']"
+    );
+    if (removeButton) {
+      await act(async () => {
+        fireEvent.click(removeButton);
+      });
+
+      expect(onChange).toHaveBeenLastCalledWith([]);
+    }
+  });
+
+  it("shows required indicator when field is required", () => {
+    render(
+      <MultiLookupField
+        {...defaultProps}
+        field={{ ...defaultField, required: true }}
+      />
+    );
+    expect(screen.getByText("*")).toBeInTheDocument();
+  });
+
+  it("shows error message when field has an error", () => {
+    render(
+      <MultiLookupField
+        {...defaultProps}
+        field={{ ...defaultField, error: "This field is required" }}
+      />
+    );
+    expect(screen.getByText("This field is required")).toBeInTheDocument();
+  });
+
+  it("shows description when provided", () => {
+    render(
+      <MultiLookupField
+        {...defaultProps}
+        field={{ ...defaultField, description: "Pick multiple records" }}
+      />
+    );
+    expect(screen.getByText("Pick multiple records")).toBeInTheDocument();
+  });
+});
+
+describe("MultiLookupField when the requester changes", () => {
+  const requesterFilter = {
+    all: [
+      {
+        field:
+          "custom_object.standard::itam_asset.custom_fields.standard::user",
+        operator: "is",
+        value: "requester_id",
+      },
+    ],
+    any: [],
+  };
+
+  const renderField = (
+    onChange: jest.Mock,
+    userId: number,
+    filter = requesterFilter
+  ) => (
+    <MultiLookupField
+      field={{
+        ...defaultField,
+        value: ["rec-a"],
+        relationship_filter: filter,
+      }}
+      userId={userId}
+      organizationId={null}
+      onChange={onChange}
+      visibleFields={[] as TicketFieldObject[]}
+    />
+  );
+
+  beforeEach(() => {
+    (globalThis.fetch as jest.Mock) = jest.fn((url: string) => {
+      if (url.includes("/records?")) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              custom_object_records: [{ id: "rec-a", name: "Record A" }],
+            }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ custom_object_records: [] }),
+      });
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("clears selected records and fires onChange with an empty array", async () => {
+    const onChange = jest.fn();
+    const { rerender, container } = render(renderField(onChange, 1));
+
+    const hiddenInputs = () =>
+      container.querySelectorAll('input[name="test_multi_lookup[]"]');
+    await waitFor(() => expect(hiddenInputs()[0]).toHaveValue("rec-a"));
+
+    rerender(renderField(onChange, 2));
+
+    await waitFor(() => expect(hiddenInputs()).toHaveLength(0));
+    expect(onChange).toHaveBeenLastCalledWith([]);
+  });
+
+  it("does not clear fields that do not depend on the requester", async () => {
+    const nonRequesterFilter = {
+      all: [{ field: "someField", operator: "is", value: "foo" }],
+      any: [],
+    };
+    const onChange = jest.fn();
+    const { rerender, container } = render(
+      renderField(onChange, 1, nonRequesterFilter)
+    );
+
+    const hiddenInputs = () =>
+      container.querySelectorAll('input[name="test_multi_lookup[]"]');
+    await waitFor(() => expect(hiddenInputs()[0]).toHaveValue("rec-a"));
+
+    rerender(renderField(onChange, 2, nonRequesterFilter));
+
+    fireEvent.focus(screen.getByLabelText("Test Multi Lookup"));
+    await waitFor(() =>
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining("requester_id=2")
+      )
+    );
+    expect(hiddenInputs()[0]).toHaveValue("rec-a");
+  });
+
+  it("clears a pending prefill and ignores the initial records fetch when the requester changed while it was in flight", async () => {
+    let resolveFetch: (value: unknown) => void = () => {};
+    (globalThis.fetch as jest.Mock) = jest.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        })
+    );
+    const onChange = jest.fn();
+    const { rerender, container } = render(renderField(onChange, 1));
+
+    await act(async () => {
+      rerender(renderField(onChange, 2));
+    });
+
+    await waitFor(() => expect(onChange).toHaveBeenCalledWith([]));
+    expect(
+      container.querySelectorAll('input[name="test_multi_lookup[]"]')
+    ).toHaveLength(0);
+
+    await act(async () => {
+      resolveFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            custom_object_records: [{ id: "rec-a", name: "Record A" }],
+          }),
+      });
+    });
+
+    expect(onChange).toHaveBeenLastCalledWith([]);
+    expect(
+      container.querySelectorAll('input[name="test_multi_lookup[]"]')
+    ).toHaveLength(0);
+  });
+
+  it("does not apply the fallback selection when the records fetch fails after the requester changed", async () => {
+    let resolveFetch: (value: unknown) => void = () => {};
+    (globalThis.fetch as jest.Mock) = jest.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve;
+        })
+    );
+    const onChange = jest.fn();
+    const { rerender, container } = render(renderField(onChange, 1));
+
+    await act(async () => {
+      rerender(renderField(onChange, 2));
+    });
+
+    await act(async () => {
+      resolveFetch({
+        ok: false,
+        json: () => Promise.resolve({}),
+      });
+    });
+
+    expect(onChange).toHaveBeenLastCalledWith([]);
+    expect(
+      container.querySelectorAll('input[name="test_multi_lookup[]"]')
+    ).toHaveLength(0);
+  });
+
+  it("refetches options for the new requester when focused while it changes", async () => {
+    const onChange = jest.fn();
+    const { rerender } = render(renderField(onChange, 1));
+
+    fireEvent.focus(screen.getByLabelText("Test Multi Lookup"));
+    await waitFor(() =>
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining("requester_id=1")
+      )
+    );
+
+    rerender(renderField(onChange, 2));
+
+    await waitFor(() =>
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining("requester_id=2")
+      )
+    );
+  });
+});
+
+describe("MultiLookupField autocomplete request races", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("an older autocomplete response cannot overwrite newer results", async () => {
+    const resolvers: Array<(value: unknown) => void> = [];
+    (globalThis.fetch as jest.Mock) = jest.fn(
+      () =>
+        new Promise((resolve) => {
+          resolvers.push(resolve);
+        })
+    );
+    render(<MultiLookupField {...defaultProps} />);
+
+    const combobox = screen.getByLabelText("Test Multi Lookup");
+    fireEvent.click(combobox);
+    fireEvent.change(combobox, { target: { value: "b" } });
+
+    await waitFor(() => expect(resolvers).toHaveLength(2));
+
+    // the newer request (the typed query) resolves first...
+    await act(async () => {
+      resolvers[1]!({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            custom_object_records: [{ name: "Record B", id: "rec-b" }],
+          }),
+      });
+    });
+    await act(async () => {
+      resolvers[0]!({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            custom_object_records: [{ name: "Record A", id: "rec-a" }],
+          }),
+      });
+    });
+
+    expect(screen.queryByText("Record A")).not.toBeInTheDocument();
+    expect(screen.getByText("Record B")).toBeInTheDocument();
+  });
+});
