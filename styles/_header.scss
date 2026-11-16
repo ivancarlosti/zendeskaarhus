@@ -2,12 +2,13 @@
 $header-height: 71px;
 
 .header {
-  @include max-width-container;
   position: relative;
   align-items: center;
   display: flex;
   height: $header-height;
   justify-content: space-between;
+
+  @include max-width-container;
 }
 
 .logo img {
@@ -29,10 +30,11 @@ $header-height: 71px;
 }
 
 .user-nav {
-  @include tablet { position: relative; }
   display: inline-block;
   position: absolute;
   white-space: nowrap;
+
+  @include tablet { position: relative; }
 
   &[aria-expanded="true"] {
     background-color: #fff;
@@ -76,16 +78,16 @@ $header-height: 71px;
   @include desktop { display: inline-block; }
 
   a {
-    @include tablet {
-      display: inline-block;
-    }
-
     border: 0;
     color: $link_color;
     display: none;
     font-size: 14px;
     padding: 0 20px 0 0;
     width: auto;
+
+    @include tablet {
+      display: inline-block;
+    }
 
     [dir="rtl"] & { padding: 0 0 0 20px;}
 

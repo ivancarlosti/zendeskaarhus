@@ -9,9 +9,10 @@
   }
 
   &-inner {
-    @include max-width-container;
     display: flex;
     justify-content: space-between;
+
+    @include max-width-container;
   }
 
   &-language-selector button {
