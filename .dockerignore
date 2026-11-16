@@ -1,0 +1,11 @@
+docs
+plans
+docker
+.github
+
+# Local/dependency noise
+.git
+node_modules
+coverage
+.sass-cache
+*.log

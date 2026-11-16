@@ -1,0 +1,14 @@
+# Build output
+.sass-cache/
+style.css.map
+node_modules/
+coverage/
+
+# Local tooling
+.a11yrc.json
+.idea/
+.DS_Store
+
+# Python helpers
+__pycache__/
+*.pyc
