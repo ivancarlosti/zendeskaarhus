@@ -89,14 +89,14 @@ python3 build/artwork.py
 
 ## Sample customisations
 
-`sample/` ships the two files CopenLight uses as ready-made examples. They are
-part of the theme (so they travel with the release zip) and you can upload them
-**as-is** to the `inject_script` and `inject_style` settings:
+`sample/` ships the two files as ready-made examples. They are part of the theme
+(so they travel with the release zip) and you can upload them **as-is** to the
+`inject_script` and `inject_style` settings:
 
 | File | What it does |
 | --- | --- |
-| `sample/style.css.example` | Hides social blocks and article votes, widens the article container to 1300px with a 260px sidebar, styles tables and code blocks, and sets the Segoe UI stack. |
-| `sample/script.js.example` | Adds a "copy" button with a clipboard icon to every `<pre>` block on the page. The theme now ships this natively (see [Code blocks](#code-blocks)), so the sample only applies to themes without it. |
+| `sample/style.css.example` | Hides social blocks and article votes, widens the article container to 1300px with a 260px sidebar, styles tables and images, sets the Segoe UI stack, and re-themes the built-in code blocks (`--code-block-max-height`, button and badge colours). |
+| `sample/script.js.example` | Adds a "Show all" toggle below code blocks the height cap is hiding. Copying, the language badge and the scrollable, focusable `<pre>` are built in — see [Code blocks](#code-blocks); this sample only extends them and never adds a second copy button. |
 
 Rename the file to `style.css` / `script.js` before uploading — Theming Center
 validates the extension — and keep the `!important` declarations: they have to
@@ -138,6 +138,10 @@ Add `data-no-copy` to a `<pre>` to leave that snippet without a button. The
 labels come from `copy_code`, `copy_code_success` and `copy_code_failure` in
 `translations/<locale>.json`; `templates/document_head.hbs` exposes them as
 `window.codeBlockLabelsLocalized`.
+
+`sample/script.js.example` shows how to extend a block without re-implementing
+the button: it appends a "Show all" toggle to `.code-block` and sets
+`--code-block-max-height: none` while the block is expanded.
 
 ## Translations
 

@@ -57,7 +57,9 @@ Theme JavaScript lives in `src/*.js` and is bundled into the committed
 7. `src/code-blocks.spec.js`: jsdom coverage for wrapping, copy, feedback,
    fallback, exclusions, badge, `tabindex` and the mutation observer.
 8. Docs: `docs/customization.md` (new "Code blocks" section, sample note),
-   `README.md` highlight, and a duplicate guard in `sample/script.js.example`.
+   `README.md` highlight, and strip the now-native copy button from
+   `sample/` (script and `<pre>`/`.copy-btn` styles), leaving a "Show all"
+   toggle that illustrates the built-in cap instead.
 9. Validate: `npm run build`, reproducible build (`git diff --exit-code`),
    `npm test`, `npm run typecheck`, `npm run validate`.
 
@@ -96,6 +98,9 @@ Theme JavaScript lives in `src/*.js` and is bundled into the committed
 - `src/code-blocks.spec.js`: 18 cases, all green (`npm test`: 83 suites / 744
   tests). `npm run typecheck` and `npm run validate` (all gates) pass, and
   `style.css` / `script.js` were rebuilt.
-- `docs/customization.md`, `README.md`, `plans/…` and the `sample/` guard
-  document the behaviour and the `data-no-copy` / `--code-block-max-height`
-  knobs.
+- `sample/script.js.example` no longer ships a copy button: the theme owns it.
+  The sample now adds a "Show all" toggle to blocks the cap is hiding, and
+  `sample/style.css.example` dropped its `pre` / `.copy-btn` /
+  `.article-body pre` overrides in favour of re-theming `.code-block`,
+  `.code-block-copy` and `.code-block-language`. `docs/customization.md`,
+  `docs/licensing.md`, `README.md` and this plan were updated to match.

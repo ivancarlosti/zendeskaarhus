@@ -51,7 +51,7 @@ See [docs/setup.md](docs/setup.md) for the full walkthrough.
 | `src/` | Theme JavaScript (`script.js`) and React modules |
 | `assets/` | Built module bundles, referenced through the import map |
 | `settings/` | Default logo, favicon and background artwork |
-| `sample/` | CopenLight's ready-made `style.css.example` and `script.js.example` |
+| `sample/` | Ready-made `style.css.example` and `script.js.example` customisations |
 | `translations/` | Theme locale files (`en-us.json`, …) |
 | `build/` | Build helpers: Sass preamble, import map, artwork generator, manifest version stamping |
 | `docs/` | Setup, customisation, testing and licensing documentation |

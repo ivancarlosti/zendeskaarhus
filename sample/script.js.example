@@ -1,69 +1,70 @@
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelectorAll('pre').forEach(function(pre) {
-    // Evita duplicar o botão copiar
-    if (pre.querySelector('.copy-btn')) return;
+/**
+ * Sample customisation: expand long code blocks.
+ *
+ * The copy button, the language badge, the capped height and the keyboard
+ * scrolling are built into the theme (`src/code-blocks.js` — see
+ * docs/customization.md#code-blocks). The theme wraps every block in
+ * `.code-block` and keeps the button next to the `<pre>`, so it stays pinned
+ * while the code scrolls; do not add a second copy button here.
+ *
+ * This sample only extends what the theme builds: it appends a "Show all"
+ * button below every block the height cap is hiding and lifts
+ * `--code-block-max-height` while the block is expanded. Pair it with the
+ * `.code-block-toggle` rules in sample/style.css.example.
+ */
+document.addEventListener("DOMContentLoaded", function () {
+  // Translate these two labels, or read them from your own translations.
+  const LABELS = {
+    expand: "Show all",
+    collapse: "Show less",
+  };
 
-    // O tema já traz este comportamento nativo (src/code-blocks.js); o exemplo
-    // serve apenas para temas que não o tenham.
-    if (pre.closest('.code-block')) return;
+  let nextId = 1;
 
-    pre.style.position = 'relative'; // importante para posicionamento absoluto do botão
+  function addToggle(wrapper) {
+    if (wrapper.dataset.toggleReady === "true") return;
 
-    // Criar botão copiar com ícone SVG
-    const copyBtn = document.createElement('button');
-    copyBtn.className = 'copy-btn';
-    copyBtn.type = 'button';
-    copyBtn.setAttribute('aria-label', 'Copiar código');
+    const pre = wrapper.querySelector(":scope > pre");
+    if (!pre) return;
 
-    // Ícone clipboard SVG inline
-    copyBtn.innerHTML = `
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z" />
-      </svg>
-    `;
+    // Nothing to reveal when the whole snippet already fits inside the cap.
+    if (pre.scrollHeight <= pre.clientHeight) return;
 
-    copyBtn.addEventListener('click', function() {
-      const codeElement = pre.querySelector('code');
-      let textToCopy = '';
+    if (!pre.id) pre.id = "code-block-" + nextId++;
 
-      if (codeElement) {
-        textToCopy = codeElement.innerText;
+    const button = document.createElement("button");
+    button.className = "code-block-toggle";
+    button.type = "button";
+    button.textContent = LABELS.expand;
+    button.setAttribute("aria-controls", pre.id);
+    button.setAttribute("aria-expanded", "false");
+
+    button.addEventListener("click", function () {
+      const expanded = wrapper.dataset.expanded !== "true";
+
+      if (expanded) {
+        wrapper.dataset.expanded = "true";
+        // `--code-block-max-height` is the theme's public knob; `none` removes
+        // the cap. The theme's ResizeObserver re-measures the block, so the
+        // `tabindex` it added for keyboard scrolling goes away on its own.
+        pre.style.setProperty("--code-block-max-height", "none");
       } else {
-        // Copiar apenas texto puro do <pre> ignorando o botão
-        textToCopy = Array.from(pre.childNodes)
-          .filter(node => node.nodeType === Node.TEXT_NODE)
-          .map(node => node.textContent)
-          .join('');
+        wrapper.removeAttribute("data-expanded");
+        pre.style.removeProperty("--code-block-max-height");
       }
 
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        // Feedback visual simples
-        copyBtn.innerHTML = `
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" >
-            <path fill="green" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-          </svg>`;
-        setTimeout(() => {
-          copyBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z" />
-            </svg>
-          `;
-        }, 1500);
-      }).catch(() => {
-        // Se erro, exibe ícone de erro (vermelho)
-        copyBtn.innerHTML = `
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" >
-            <path fill="red" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.29 13.29-1.41 1.41L12 13.41l-2.88 2.88-1.41-1.41L10.59 12 7.71 9.12l1.41-1.41L12 10.59l2.88-2.88 1.41 1.41L13.41 12l2.88 2.88z"/>
-          </svg>`;
-        setTimeout(() => {
-          copyBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z" />
-            </svg>`;
-        }, 1500);
-      });
+      button.setAttribute("aria-expanded", String(expanded));
+      button.textContent = expanded ? LABELS.collapse : LABELS.expand;
     });
 
-    pre.appendChild(copyBtn);
+    wrapper.appendChild(button);
+    wrapper.dataset.toggleReady = "true";
+  }
+
+  // The theme enhances the blocks on DOMContentLoaded, so `load` runs after
+  // every `.code-block` wrapper exists. Content injected later (AJAX, modals)
+  // is not covered — call this again if you need it.
+  window.addEventListener("load", function () {
+    document.querySelectorAll(".code-block").forEach(addToggle);
   });
 });
