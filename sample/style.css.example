@@ -201,10 +201,11 @@ img,
    keyboard-scrollable <pre> (docs/customization.md#code-blocks). Do not bring
    back `pre { position: relative }` or a `.copy-btn` here: the theme keeps the
    controls in `.code-block`, next to the <pre>, so they stay pinned while the
-   code scrolls. These rules only re-theme what the theme already built. */
+   code scrolls. These rules only re-theme what the theme already built; the
+   block spacing stays with the theme (`_code-blocks.scss` keeps the richtext
+   rhythm and removes the margin from the last block). */
 .code-block {
   --code-block-max-height: 24rem !important; /* theme default: 32rem */
-  margin-bottom: 2em !important;
 }
 
 .code-block-copy {
