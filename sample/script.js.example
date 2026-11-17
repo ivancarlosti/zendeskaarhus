@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // Evita duplicar o botão copiar
     if (pre.querySelector('.copy-btn')) return;
 
+    // O tema já traz este comportamento nativo (src/code-blocks.js); o exemplo
+    // serve apenas para temas que não o tenham.
+    if (pre.closest('.code-block')) return;
+
     pre.style.position = 'relative'; // importante para posicionamento absoluto do botão
 
     // Criar botão copiar com ícone SVG

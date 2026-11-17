@@ -72,6 +72,10 @@ production bundles.
   });
   ```
 
+- jsdom has no layout: `scrollWidth` / `clientWidth` are `0`, so specs that
+  depend on overflow (`src/code-blocks.spec.js`) stub the measurements with
+  `Object.defineProperty`.
+
 - `window.location` is read-only in jsdom 27. Navigation goes through
   `navigateTo()` (`src/modules/shared/navigation.ts`), which tests mock per
   module: `jest.mock("../../shared/navigation", () => ({ navigateTo: jest.fn() }))`.

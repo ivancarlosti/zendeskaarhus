@@ -20,6 +20,9 @@ theme.
   variables and `lighten()` / `darken()` calls admins can edit in place.
 - **Accessibility** — skip links, labelled landmarks, keyboard support for the
   dropdowns and visible focus styles.
+- **Code blocks** — a theme-aware copy button pinned to the block corner, a
+  language badge, a capped height with keyboard-scrollable overflow and a live
+  region for the copy result.
 
 ## Quick start
 

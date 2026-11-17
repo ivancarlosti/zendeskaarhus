@@ -14,6 +14,15 @@
 <!-- Make the translated search clear button label available for use in JS -->
 <!-- See buildClearSearchButton() in script.js -->
 <script type="text/javascript">window.searchClearButtonLabelLocalized = "{{t 'search_clear'}}";</script>
+<!-- Make the translated code block labels available for use in JS -->
+<!-- See enhanceCodeBlock() in script.js -->
+<script type="text/javascript">
+  window.codeBlockLabelsLocalized = {
+    copy: "{{t 'copy_code'}}",
+    success: "{{t 'copy_code_success'}}",
+    failure: "{{t 'copy_code_failure'}}"
+  };
+</script>
 <script type="text/javascript">
   // Load ES module polyfill only for browsers that don't support ES modules
   if (!(HTMLScriptElement.supports && HTMLScriptElement.supports('importmap'))) {

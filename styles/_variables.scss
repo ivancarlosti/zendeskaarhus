@@ -35,5 +35,13 @@ $border-radius-sm: 5px; // buttons, inputs and other controls
 $border-radius-md: 10px; // cards, panels and media
 $focus-ring-width: 2px;
 
+// Code blocks
+$code-font-family: SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+  "Courier New", monospace;
+
+// Feedback states, matching the Garden palette the React modules use
+$success-color: #038153; // 5.0:1 on white
+$danger-color: #CC3340; // 5.4:1 on white
+
 // Transitions
 $input-transition: border .12s ease-in-out;

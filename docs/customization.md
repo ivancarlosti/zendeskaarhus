@@ -96,7 +96,7 @@ part of the theme (so they travel with the release zip) and you can upload them
 | File | What it does |
 | --- | --- |
 | `sample/style.css.example` | Hides social blocks and article votes, widens the article container to 1300px with a 260px sidebar, styles tables and code blocks, and sets the Segoe UI stack. |
-| `sample/script.js.example` | Adds a "copy" button with a clipboard icon to every `<pre>` block on the page. |
+| `sample/script.js.example` | Adds a "copy" button with a clipboard icon to every `<pre>` block on the page. The theme now ships this natively (see [Code blocks](#code-blocks)), so the sample only applies to themes without it. |
 
 Rename the file to `style.css` / `script.js` before uploading — Theming Center
 validates the extension — and keep the `!important` declarations: they have to
@@ -104,6 +104,40 @@ win over `style.css`, which loads first.
 
 `sample/` only holds examples: the files Guide looks for are the stubs in
 `settings/`, and both must stay in the theme.
+
+## Code blocks
+
+`src/code-blocks.js` enhances every `<pre>` an article, post, comment or
+service-catalog description renders:
+
+- the block is wrapped in `.code-block` and the copy button and the
+  `role="status"` live region are inserted as **siblings** of the `<pre>`, so the
+  controls stay pinned while the code scrolls;
+- a language badge is added when the markup exposes one (`language-js` or
+  `lang-js` on the `<pre>`/`<code>`, or `data-language="Bash"`); the `<pre>` then
+  reserves a small strip so the badge never covers the first line;
+- long blocks are capped by `--code-block-max-height` (`32rem` by default) and
+  scroll vertically, and the `<pre>` receives `tabindex="0"` only while it
+  actually overflows, so keyboard users can scroll it;
+- copying uses `navigator.clipboard.writeText` and falls back to
+  `document.execCommand("copy")`; the result is announced through the live
+  region and the icon resets after two seconds;
+- the rich text editor (`#hc-wysiwyg`, `.ck-content`) and any block marked
+  `data-no-copy` are skipped.
+
+Tune the cap from `inject_style.css` (upload through *Custom settings → Inject
+style*):
+
+```css
+:root {
+  --code-block-max-height: 48rem;
+}
+```
+
+Add `data-no-copy` to a `<pre>` to leave that snippet without a button. The
+labels come from `copy_code`, `copy_code_success` and `copy_code_failure` in
+`translations/<locale>.json`; `templates/document_head.hbs` exposes them as
+`window.codeBlockLabelsLocalized`.
 
 ## Translations
 
@@ -168,4 +202,6 @@ When changing markup, keep:
 - the skip link in `templates/header.hbs` (`#main-content`),
 - `aria-expanded` / `aria-controls` on the dropdowns (`src/Dropdown.js`),
 - visible focus styles — do not remove `:focus` outlines without a replacement,
+- the code block copy button — translated `aria-label`, feedback through the
+  `role="status"` element and `tabindex="0"` on overflowing blocks,
 - form labels linked through Garden's `Field` components.

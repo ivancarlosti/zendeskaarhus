@@ -1,0 +1,189 @@
+/***** Code blocks *****/
+// `src/code-blocks.js` wraps every block in `.code-block` and inserts the copy
+// button, the language badge and the live region as siblings of the <pre>.
+// They cannot live inside the <pre>: that element scrolls its own content
+// (both axes, capped by `--code-block-max-height`), so a nested control would
+// drift away from the corner as soon as the code is scrolled.
+
+.code-block {
+  max-width: 100%;
+  position: relative;
+
+  > pre {
+    background: $primary-shade;
+    border: 1px solid $low-contrast-border-color;
+    border-left: 4px solid $brand_color;
+    border-radius: $border-radius-sm;
+    font-family: $code-font-family;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    max-height: var(--code-block-max-height, 32rem);
+    overflow: auto;
+    overscroll-behavior-x: contain;
+    padding: 16px 56px 16px 16px;
+    scrollbar-color: $high-contrast-border-color transparent;
+    scrollbar-width: thin;
+    tab-size: 2;
+
+    &::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $high-contrast-border-color;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    // A scroll container has to show where the focus goes; the box-shadow ring
+    // of `focus-ring` would be clipped by the block's own overflow.
+    &:focus-visible {
+      outline: $focus-ring-width solid $brand_color;
+      outline-offset: 2px;
+    }
+
+    @include mobile {
+      font-size: 13px;
+      padding: 14px 52px 14px 14px;
+    }
+  }
+}
+
+// The badge gets its own strip above the first line instead of covering the
+// code. The attribute is only set when the markup exposes a language.
+.code-block[data-language] > pre {
+  padding-top: 34px;
+}
+
+// The wrapper carries the richtext rhythm the <pre> used to own. It has to be
+// scoped, because `_mixins.scss` sets `> :last-child { margin-bottom: 0 }`.
+.article-body > .code-block,
+.comment-body > .code-block,
+.post-body > .code-block,
+.service-catalog-description > .code-block {
+  margin: 0 0 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.code-block-copy {
+  align-items: center;
+  background-color: $background_color;
+  border: 1px solid $low-contrast-border-color;
+  border-radius: $border-radius-sm;
+  color: $brand_color;
+  cursor: pointer;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  transition: background-color .15s ease-in-out, border-color .15s ease-in-out,
+    color .15s ease-in-out;
+  width: 32px;
+  z-index: 2;
+
+  svg {
+    height: 16px;
+    pointer-events: none;
+    width: 16px;
+  }
+
+  &:hover,
+  &:active {
+    background-color: $secondary-shade;
+    border-color: $high-contrast-border-color;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &[data-state="success"] {
+    border-color: $success-color;
+    color: $success-color;
+  }
+
+  &[data-state="failure"] {
+    border-color: $danger-color;
+    color: $danger-color;
+  }
+
+  [dir="rtl"] & {
+    left: 8px;
+    right: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @include mobile {
+    height: 28px;
+    right: 6px;
+    top: 6px;
+    width: 28px;
+  }
+}
+
+.code-block-language {
+  background-color: $secondary-shade;
+  border-radius: 3px;
+  color: $secondary-text-color;
+  font-family: $code-font-family;
+  font-size: 11px;
+  font-weight: $font-weight-semibold;
+  letter-spacing: .04em;
+  line-height: 1;
+  max-width: 8ch;
+  overflow: hidden;
+  padding: 4px 6px;
+  pointer-events: none;
+  position: absolute;
+  right: 48px;
+  text-overflow: ellipsis;
+  top: 12px;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 2;
+
+  [dir="rtl"] & {
+    left: 48px;
+    right: auto;
+  }
+
+  @include mobile {
+    font-size: 10px;
+    right: 42px;
+    top: 11px;
+  }
+}
+
+.code-block-status {
+  @include visually-hidden;
+}
+
+@media print {
+  .code-block-copy,
+  .code-block-language {
+    display: none;
+  }
+
+  .code-block > pre,
+  .code-block[data-language] > pre {
+    border-left-width: 1px;
+    max-height: none;
+    overflow: visible;
+    padding-top: 16px;
+  }
+}
+
