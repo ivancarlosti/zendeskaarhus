@@ -70,6 +70,30 @@ python3 -m pip install Pillow
 python3 build/artwork.py
 ```
 
+## Article page elements
+
+The **Article page elements** group in `manifest.json` turns whole blocks of
+`templates/article_page.hbs` on and off. Every setting is a checkbox and
+defaults to `true`, so upgrading keeps the current rendering.
+
+| Setting | Template block | Default |
+| --- | --- | --- |
+| `show_articles_in_section` | sidebar listing the other articles in the section | on |
+| `show_article_author` | author image and name | on |
+| `show_article_comments` | comment count and comment list | on |
+| `show_article_votes` | "was this article helpful?" vote buttons | on |
+| `show_article_more_questions` | `request_callout` — "Have more questions? Submit a request" | on |
+| `show_follow_article` | follow button | on |
+| `show_recently_viewed_articles` | recently viewed articles | on |
+| `show_related_articles` | related articles | on |
+| `show_article_sharing` | social sharing | on |
+
+Each template block is guarded by `{{#if settings.<identifier>}}`, so turning
+the setting off removes the markup instead of hiding it with CSS: no empty
+borders or leftover spacing remain. `show_article_votes` and
+`show_article_more_questions` replace the `.article-votes { display: none; }`
+workaround that custom stylesheets needed before.
+
 ## Custom settings
 
 `manifest.json` keeps three custom settings under the **Custom** group:

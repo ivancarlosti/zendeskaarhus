@@ -326,6 +326,20 @@
           "value": true
         },
         {
+          "identifier": "show_article_votes",
+          "type": "checkbox",
+          "description": "article_votes_description",
+          "label": "article_votes_label",
+          "value": true
+        },
+        {
+          "identifier": "show_article_more_questions",
+          "type": "checkbox",
+          "description": "article_more_questions_description",
+          "label": "article_more_questions_label",
+          "value": true
+        },
+        {
           "identifier": "show_follow_article",
           "type": "checkbox",
           "description": "follow_article_description",
