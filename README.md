@@ -7,72 +7,13 @@ rollup 4, Jest 30), derived from Zendesk's Apache-2.0 licensed Help Center
 theme.
 
 <!-- buttons -->
-
-## Highlights
-
-- **Help Center templates** for articles, sections, categories, community,
-  requests, approvals, service catalog and search.
-- **React modules** for the new request form, request list, approval requests,
-  service catalog and rich text editing.
-- **37 locales** for the theme strings and **104 locales** for each module, all
-  namespaced `aarhus-theme-*`.
-- **Theming Center friendly** — `style.css` keeps the `$brand_color`-style
-  variables and `lighten()` / `darken()` calls admins can edit in place.
-- **Accessibility** — skip links, labelled landmarks, keyboard support for the
-  dropdowns and visible focus styles.
-- **Code blocks** — a theme-aware copy button pinned to the block corner, a
-  language badge, a capped height with keyboard-scrollable overflow and a live
-  region for the copy result.
-
-## Quick start
-
-```bash
-npm install          # install dependencies
-npm run build        # compile style.css, script.js and assets/*-bundle.js
-npm test             # run the Jest suite
-npm run typecheck    # tsc --noEmit
-```
-
-Package the theme in Zendesk:
-
-```bash
-npx zcli themes:create --path .   # upload as a new theme
-npx zcli themes:preview --path .  # local preview server
-```
-
-See [docs/setup.md](docs/setup.md) for the full walkthrough.
-
-## Repository layout
-
-| Path | Contents |
-| --- | --- |
-| `templates/` | Curlybars templates rendered by Zendesk Guide |
-| `styles/` | SCSS sources compiled into `style.css` |
-| `src/` | Theme JavaScript (`script.js`) and React modules |
-| `assets/` | Built module bundles, referenced through the import map |
-| `settings/` | Default logo, favicon and background artwork |
-| `sample/` | Ready-made `style.css.example` and `script.js.example` customisations |
-| `translations/` | Theme locale files (`en-us.json`, …) |
-| `build/` | Build helpers: Sass preamble, import map, artwork generator, manifest version stamping |
-| `docs/` | Setup, customisation, testing and licensing documentation |
-| `plans/` | Implementation plans for larger changes |
-
-## Documentation
-
-- [Setup](docs/setup.md) — install, build, preview and deploy.
-- [Versioning](docs/versioning.md) — SemVer rules Guide enforces and how
-  releases stamp `manifest.json`.
-- [Customisation](docs/customization.md) — palette, artwork, injected files and
-  the files in `sample/`.
-- [Testing](docs/testing.md) — the Jest/TypeScript setup and conventions.
-- [Licensing](docs/licensing.md) — provenance, Apache-2.0 and MIT scope.
-
-## License
-
-Aarhus is derived from Zendesk's Apache-2.0 licensed Help Center theme. See
-[LICENSE](LICENSE) (Apache-2.0), [NOTICE](NOTICE) for the modification record
-and [LICENSES/MIT.txt](LICENSES/MIT.txt) for the parts written from scratch.
-
-<!-- footer -->
-
-<p align="center">Aarhus — a Zendesk Help Center theme.</p>
+[![Stars](https://img.shields.io/github/stars/ivancarlosti/zendeskaarhus?label=⭐%20Stars&color=gold&style=flat)](https://github.com/ivancarlosti/zendeskaarhus/stargazers)
+[![Watchers](https://img.shields.io/github/watchers/ivancarlosti/zendeskaarhus?label=Watchers&style=flat&color=red)](https://github.com/sponsors/ivancarlosti)
+[![Forks](https://img.shields.io/github/forks/ivancarlosti/zendeskaarhus?label=Forks&style=flat&color=ff69b4)](https://github.com/sponsors/ivancarlosti)
+[![Downloads](https://img.shields.io/github/downloads/ivancarlosti/zendeskaarhus/total?label=Downloads&color=success)](https://github.com/ivancarlosti/zendeskaarhus/releases)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ivancarlosti/zendeskaarhus?label=Activity)](https://github.com/ivancarlosti/zendeskaarhus/pulse)
+[![GitHub Issues](https://img.shields.io/github/issues/ivancarlosti/zendeskaarhus?label=Issues&color=orange)](https://github.com/ivancarlosti/zendeskaarhus/issues)  
+[![License](https://img.shields.io/github/license/ivancarlosti/zendeskaarhus?label=License)](LICENSE)
+[![GitHub last commit](https://img.shields.io/github/last-commit/ivancarlosti/zendeskaarhus?label=Last%20Commit)](https://github.com/ivancarlosti/zendeskaarhus/commits)
+[![Security](https://img.shields.io/badge/Security-View%20Here-purple)](https://github.com/ivancarlosti/zendeskaarhus/security)
+[![Code of Conduct](https://img.shields.io/badge/Code%20of%20Conduct-2.1-4baaaa)](https://github.com/ivancarlosti/zendeskaarhus?tab=coc-ov-file)
