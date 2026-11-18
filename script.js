@@ -519,6 +519,41 @@
     }
   }
 
+  // Empty-comment detection
+  //
+  // The wysiwyg editor submits HTML, while the plain textarea submits text. Only
+  // "does this render anything" matters for the Mark as solved label, so the
+  // markup is inspected as text instead of being parsed: DOMParser would
+  // reinterpret the editor's DOM text as HTML, which is the pattern
+  // js/xss-through-dom flags, and no DOM tree is needed to answer the question.
+
+  // `<img `, `<img>` and `<img/>` all count as media, even without attributes.
+  const IMAGE_TAG = /<img[\s/>]/i;
+  const MARKUP_TAG = /<[^>]*>/g;
+  // `&nbsp;` and its numeric spellings are the entities CKEditor uses for a
+  // visually empty paragraph.
+  const WHITESPACE_ENTITY = /&(?:nbsp|#160|#x0*a0);/gi;
+
+  /**
+   * @param {string} text
+   * @returns {boolean} whether `text` has no visible characters
+   */
+  function isEmptyPlaintext(text) {
+    return text.trim() === "";
+  }
+
+  /**
+   * @param {string} html
+   * @returns {boolean} whether `html` renders no text and no image
+   */
+  function isEmptyHtml(html) {
+    if (IMAGE_TAG.test(html)) return false;
+
+    return isEmptyPlaintext(
+      html.replace(MARKUP_TAG, " ").replace(WHITESPACE_ENTITY, " ")
+    );
+  }
+
   // Forms
 
   window.addEventListener("DOMContentLoaded", () => {
@@ -603,16 +638,6 @@
     const usesWysiwyg =
       requestCommentTextarea &&
       requestCommentTextarea.dataset.helper === "wysiwyg";
-
-    function isEmptyPlaintext(s) {
-      return s.trim() === "";
-    }
-
-    function isEmptyHtml(xml) {
-      const doc = new DOMParser().parseFromString(`<_>${xml}</_>`, "text/xml");
-      const img = doc.querySelector("img");
-      return img === null && isEmptyPlaintext(doc.children[0].textContent);
-    }
 
     const isEmpty = usesWysiwyg ? isEmptyHtml : isEmptyPlaintext;
 

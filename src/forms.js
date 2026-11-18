@@ -1,5 +1,6 @@
 import { ENTER } from "./Keys";
 import { saveFocus, returnFocus } from "./focus";
+import { isEmptyHtml, isEmptyPlaintext } from "./is-empty";
 
 // Forms
 
@@ -85,16 +86,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const usesWysiwyg =
     requestCommentTextarea &&
     requestCommentTextarea.dataset.helper === "wysiwyg";
-
-  function isEmptyPlaintext(s) {
-    return s.trim() === "";
-  }
-
-  function isEmptyHtml(xml) {
-    const doc = new DOMParser().parseFromString(`<_>${xml}</_>`, "text/xml");
-    const img = doc.querySelector("img");
-    return img === null && isEmptyPlaintext(doc.children[0].textContent);
-  }
 
   const isEmpty = usesWysiwyg ? isEmptyHtml : isEmptyPlaintext;
 
