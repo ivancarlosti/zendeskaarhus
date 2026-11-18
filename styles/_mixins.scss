@@ -99,6 +99,42 @@
     margin: 0 0 20px;
   }
 
+  // Rich text tables. `table-layout: fixed` stops a wide row from pushing the
+  // article past the card; the cells wrap instead of overflowing.
+  table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    word-wrap: break-word;
+  }
+
+  th,
+  td {
+    border: 1px solid $low-contrast-border-color;
+    padding: 10px;
+    text-align: left;
+
+    [dir="rtl"] & {
+      text-align: right;
+    }
+  }
+
+  th {
+    background-color: $link_color;
+    // The same token the buttons use for text on a filled surface.
+    color: $brand_text_color;
+    font-weight: $font-weight-semibold;
+  }
+
+  // A link inside a header cell would otherwise be link-blue on link-blue; the
+  // `:visited` selector is spelled out because `standalone-link` outranks a
+  // plain `th a`.
+  th a,
+  th a:visited {
+    color: $brand_text_color;
+    text-decoration: underline;
+  }
+
   h1,
   h2,
   h3,
@@ -117,6 +153,8 @@
   }
 
   img {
+    border-radius: $border-radius-sm;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
     height: auto;
     max-width: 100%;
   }
@@ -127,22 +165,33 @@
     @include image-alignment;
   }
 
+  // A framed figure: the frame owns the border and the padding, the image fills
+  // it, so the corner radius and the shadow of a loose image are switched off.
   figure.image {
+    border: 1px solid $low-contrast-border-color;
     display: table;
 
     margin: 24px auto;
+    padding: 5px;
 
     @include image-alignment;
 
     > img {
+      border-radius: 0;
+      box-shadow: none;
       display: block;
       width: 100%;
     }
   }
 
+  figure > p {
+    margin: 0;
+  }
+
   figcaption {
-    padding: 10px 0;
-    font-size: 12px;
+    padding: 10px;
+    font-size: $font-size-small;
+    font-style: italic;
     text-align: center;
     background-color: $secondary-shade;
   }

@@ -42,6 +42,8 @@
   "follow_topic_description": "उपयोगकर्ता एक विशिष्ट विषय का अनुसरण कर सकते हैं",
   "follow_topic_label": "अनुसरण करें",
   "fonts_group_label": "फॉन्ट",
+  "heading_color_description": "शीर्षक तत्वों के टेक्स्ट का रंग",
+  "heading_color_label": "शीर्षक रग",
   "heading_font_description": "शीर्षकों के लिए फॉन्ट",
   "heading_font_label": "शीर्षक फॉन्ट",
   "home_page_group_label": "होम पेज तत्व",

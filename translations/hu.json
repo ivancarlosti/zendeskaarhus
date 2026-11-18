@@ -42,6 +42,8 @@
   "follow_topic_description": "A felhasználók követhetnek egy adott témakört",
   "follow_topic_label": "Követés",
   "fonts_group_label": "Betűtípusok",
+  "heading_color_description": "A címsorok szövegszíne",
+  "heading_color_label": "Címszín",
   "heading_font_description": "Címsorok betűtípusa",
   "heading_font_label": "Fejléc betűtípusa",
   "home_page_group_label": "Kezdőlap elemei",

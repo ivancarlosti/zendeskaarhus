@@ -9,19 +9,61 @@ or `src/`.
 | Setting | Default | Notes |
 | --- | --- | --- |
 | `brand_color` | `#17494D` | CopenLight teal; also feeds `--hc-primary-color` for the rich text editor |
-| `brand_text_color` | `#FFFFFF` | text on brand-coloured buttons (10.0:1 on `brand_color`) |
-| `text_color` | `#2F3941` | body copy (11.8:1 on white) |
-| `link_color` | `#1F73B7` | 5.0:1 on the default background |
-| `hover_link_color` | `#0F3554` | hover/active links (12.7:1) |
-| `visited_link_color` | `#9358B0` | visited links (4.9:1) |
-| `background_color` | `#FFFFFF` | `$primary-shade` / `$secondary-shade` derive from it |
-| `heading_font`, `text_font` | system stack | no web fonts are requested, so there is no third-party call |
+| `brand_text_color` | `#FFFFFF` | text on brand-coloured buttons (10.0:1 on `brand_color`), and the text of the table header row |
+| `text_color` | `#222222` | body copy (15.2:1 on the default background) |
+| `heading_color` | `#004080` | headings, `h1`–`h6` (9.8:1) |
+| `link_color` | `#007ACC` | links, and the fill of rich text table headers (4.3:1 — see below) |
+| `hover_link_color` | `#005A99` | hover, active and focus state of links (6.9:1) |
+| `visited_link_color` | `#9358B0` | visited links (4.7:1) |
+| `background_color` | `#FAFAFA` | page colour; `$primary-shade`, `$secondary-shade` and `$surface-color` (the cards) derive from it |
+| `heading_font` | system stack | headings |
+| `text_font` | `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif` | body copy; both lists offer the same options, so headings can be switched to Segoe UI as well |
 
-These are the CopenLight defaults. `build/artwork.py` mirrors the same values, so
-changing a colour means regenerating the artwork as well.
+No web fonts are requested, so there is no third-party call.
+
+`link_color` `#007ACC` on `#FAFAFA` is 4.3:1, just under the 4.5:1 WCAG AA
+threshold for body text. `#0069B4` (5.1:1) is the drop-in replacement if you
+need AA on body links; body copy, headings and the hover colour already exceed
+it.
+
+These are the shipped defaults. `build/artwork.py` generates the logo, the hero
+images and the thumbnail from the teal `brand_color` plus fixed accent tones
+that belong to the artwork, so the illustrations are only regenerated when the
+brand itself changes.
 
 Changing a colour in the manifest changes both `style.css` (through the Sass
 preamble) and the React modules (through `createTheme`, which feeds Garden).
+
+## Layout
+
+`$max-width-container` is 1300px and is shared by `.container`, `.header` and
+`.footer-inner`, so every page lines up with the article page.
+
+The article page is built from two cards. `.article` is the readable column,
+`.article-sidebar` the section listing; both sit on `$surface-color`
+(`lighten($background_color, 5%)`, white for the default background). From
+1024px up the cards are side by side
+with a 40px gap: the sidebar is fixed at 260px and the article flexes between
+300px and the remaining ~1000px, which keeps the line length sane without a
+third breakpoint. Below 1024px the sidebar stacks above the article, and article
+body copy uses a 1.7 line-height. The article card uses `$border-radius-lg`
+(12px) and the sidebar `$border-radius-md` (10px).
+
+## Rich text
+
+Every rich text container (`.article-body`, `.post-body`, `.comment-body`,
+`.service-catalog-description`) includes the `content-body` mixin from
+`styles/_mixins.scss`, which owns the typography of what admins publish:
+
+- **tables** — `table-layout: fixed`, 1px `$low-contrast-border-color` cells with
+  10px padding, and a header row filled with `$link_color` and written in
+  `$brand_text_color`;
+- **images** — `$border-radius-sm` (5px) and a soft shadow;
+- **`figure.image`** — a 5px frame around the image instead of the radius and
+  shadow, with the caption on `$secondary-shade`, italic and centred;
+- **code** — inline `<code>` and `<pre>` on `$primary-shade`; real snippets are
+  upgraded to `.code-block` by `src/code-blocks.js` — see
+  [Code blocks](#code-blocks).
 
 ## How `style.css` stays editable
 
@@ -119,12 +161,14 @@ workaround that custom stylesheets needed before.
 
 | File | What it does |
 | --- | --- |
-| `sample/style.css.example` | Hides social blocks and article votes, widens the article container to 1300px with a 260px sidebar, styles tables and images, sets the Segoe UI stack, and re-themes the built-in code blocks (`--code-block-max-height`, button and badge colours). |
+| `sample/style.css.example` | Shows what an injected stylesheet is still for: a content convention (`ul li strong`), print layout, a phone-only code cap and a custom `.callout` class. Palette, layout, tables, figures and code blocks now come from the theme itself — see [Palette and typography](#palette-and-typography), [Layout](#layout) and [Rich text](#rich-text). |
 | `sample/script.js.example` | Adds a "Show all" toggle below code blocks the height cap is hiding. Copying, the language badge and the scrollable, focusable `<pre>` are built in — see [Code blocks](#code-blocks); this sample only extends them and never adds a second copy button. |
 
 Rename the file to `style.css` / `script.js` before uploading — Theming Center
-validates the extension — and keep the `!important` declarations: they have to
-win over `style.css`, which loads first.
+validates the extension. An injected file is loaded after the theme's own
+`style.css`, so a selector that is more specific wins; reach for `!important`
+only where you have to beat an existing declaration (the print block in the
+sample does, its custom property and custom class do not).
 
 `sample/` only holds examples: the files Guide looks for are the stubs in
 `settings/`, and both must stay in the theme.
@@ -140,7 +184,7 @@ service-catalog description renders:
 - a language badge is added when the markup exposes one (`language-js` or
   `lang-js` on the `<pre>`/`<code>`, or `data-language="Bash"`); the `<pre>` then
   reserves a small strip so the badge never covers the first line;
-- long blocks are capped by `--code-block-max-height` (`32rem` by default) and
+- long blocks are capped by `--code-block-max-height` (`24rem` by default) and
   scroll vertically, and the `<pre>` receives `tabindex="0"` only while it
   actually overflows, so keyboard users can scroll it;
 - copying uses `navigator.clipboard.writeText` and falls back to
@@ -179,6 +223,11 @@ They are translated in `en-us`, `en-gb`, `es`, `es-419`, `pt` and `pt-br`; for
 the other locales Guide falls back to the theme's default locale (`en-us`). To
 add a translation, copy the short strings from `translations/en-us.json` and
 keep the `{{ACTUALPAGE}}` placeholder untouched.
+
+Everything else is a base key, and the base key set has to be identical in all
+37 files — `build/validate.py` fails the build otherwise. Adding a setting means
+adding its `label` and `description` keys everywhere at once, which is how
+`heading_color_label` and `heading_color_description` were introduced.
 
 Module strings live in `src/modules/<module>/translations/locales/*.json` and use
 the `aarhus-theme-*` key namespace. The English source for each module is
@@ -233,3 +282,25 @@ When changing markup, keep:
 - the code block copy button — translated `aria-label`, feedback through the
   `role="status"` element and `tabindex="0"` on overflowing blocks,
 - form labels linked through Garden's `Field` components.
+
+## Reverting to the defaults
+
+There is no "reset" button in the Customize panel, and the theme cannot add one:
+that panel is Guide's own UI, built from the variables declared in
+`manifest.json` (colour, list, checkbox, text, textarea and file types — none of
+them an action), while the theme's templates only render the public Help Center.
+The values live in Guide, not in the theme, so there is no theme-side hook to
+reset them.
+
+What does work:
+
+- **Set the values back by hand.** The tables above list every default, and a
+  colour picker accepts the hex value directly.
+- **Roll the theme back.** Guide keeps the published versions of a theme;
+  restoring an earlier version brings back its files and its settings together.
+- **Clear an inject file.** *Custom settings → Inject style* / *Inject script*
+  can be emptied — an empty file setting is not loaded at all, so the CSS and
+  the JavaScript disappear without leaving a stub behind.
+- **Drop one override.** `--code-block-max-height` falls back to `24rem` as soon
+  as the rule that sets it is removed.
+

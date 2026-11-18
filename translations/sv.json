@@ -42,6 +42,8 @@
   "follow_topic_description": "Användare kan följa ett specifikt ämne",
   "follow_topic_label": "Följ",
   "fonts_group_label": "Typsnitt",
+  "heading_color_description": "Textfärg för rubriker",
+  "heading_color_label": "Rubrikfärg",
   "heading_font_description": "Typsnitt för rubriker",
   "heading_font_label": "Rubriktypsnitt",
   "home_page_group_label": "Element på hemsidan",

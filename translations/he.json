@@ -42,6 +42,8 @@
   "follow_topic_description": "המשתמשים יכולים לעקוב אחרי נושא ספציפי",
   "follow_topic_label": "עקוב",
   "fonts_group_label": "גופנים",
+  "heading_color_description": "צבע הטקסט של כותרות",
+  "heading_color_label": "צבע כותרות",
   "heading_font_description": "גופן בשביל הכותרות",
   "heading_font_label": "גופן כותרות",
   "home_page_group_label": "רכיבי דף הבית",

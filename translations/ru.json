@@ -42,6 +42,8 @@
   "follow_topic_description": "Пользователи могут подписаться на определенную тему",
   "follow_topic_label": "Подписаться",
   "fonts_group_label": "Шрифты",
+  "heading_color_description": "Цвет текста заголовков",
+  "heading_color_label": "Цвет заголовков",
   "heading_font_description": "Шрифт для заголовков",
   "heading_font_label": "Шрифт заголовка",
   "home_page_group_label": "Элементы главной страницы",

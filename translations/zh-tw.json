@@ -42,6 +42,8 @@
   "follow_topic_description": "使用者可追蹤指定主題",
   "follow_topic_label": "追蹤",
   "fonts_group_label": "字型",
+  "heading_color_description": "標題元素的文字顏色",
+  "heading_color_label": "標題顏色",
   "heading_font_description": "標題字型",
   "heading_font_label": "標題字型",
   "home_page_group_label": "主頁元素",

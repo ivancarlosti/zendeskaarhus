@@ -42,6 +42,8 @@
   "follow_topic_description": "Utilizatorii pot urmări un anumit subiect",
   "follow_topic_label": "Urmăriți",
   "fonts_group_label": "Fonturi",
+  "heading_color_description": "Culoarea textului pentru titluri",
+  "heading_color_label": "Culoarea titlurilor",
   "heading_font_description": "Font pentru anteturi",
   "heading_font_label": "Font antet",
   "home_page_group_label": "Elemente pagină de pornire",

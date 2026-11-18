@@ -42,6 +42,8 @@
   "follow_topic_description": "Потребителите могат да следят конкретна тема",
   "follow_topic_label": "Следене",
   "fonts_group_label": "Шрифтове",
+  "heading_color_description": "Цвят на текста на заглавията",
+  "heading_color_label": "Цвят на заглавията",
   "heading_font_description": "Шрифт за заглавки",
   "heading_font_label": "Шрифт на заглавка",
   "home_page_group_label": "Елементи на началната страница",

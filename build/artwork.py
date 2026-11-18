@@ -28,9 +28,10 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # CopenLight palette — every value mirrors a `manifest.json` default:
-# BRAND is `brand_color`, INK `hover_link_color`, ACCENT `link_color`,
-# HIGHLIGHT `visited_link_color` and SURFACE the neutral panel tone used by
-# `sample/style.css.example`. Change both files together.
+# BRAND is `brand_color`; ACCENT, INK, HIGHLIGHT and SURFACE are the artwork's
+# own accent tones (they used to mirror `link_color`, `hover_link_color`,
+# `visited_link_color` and the panel grey). Regenerate the artwork when the
+# brand changes, not on every palette tweak.
 BRAND = (23, 73, 77)  # #17494D
 INK = (15, 53, 84)  # #0F3554
 ACCENT = (31, 115, 183)  # #1F73B7

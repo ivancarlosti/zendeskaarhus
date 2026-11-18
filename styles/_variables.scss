@@ -6,6 +6,10 @@ $secondary-text-color: theme-lighten($text_color, 20%);
 
 $primary-shade: theme-darken($background_color, 3%); //#f8f8f8 for the default background_color
 $secondary-shade: theme-darken($background_color, 5%); //#f2f2f2 for the default background_color
+// Cards (the article and its sidebar). Lightening the page colour keeps the
+// surface one step above the background, and stays invisible-but-harmless when
+// an admin sets `background_color` to pure white.
+$surface-color: theme-lighten($background_color, 5%); //#ffffff for the default background_color
 
 $font-size-bigger: 16px;
 $font-size-base: 15px;
@@ -26,13 +30,14 @@ $field-text-focus-color: #555;
 // Breakpoints variables
 $tablet-width: 768px;
 $desktop-width: 1024px;
-$max-width-container: 1160px;
+$max-width-container: 1300px;
 
 $font-weight-semibold: 600;
 
 // Aarhus design tokens
 $border-radius-sm: 5px; // buttons, inputs and other controls
 $border-radius-md: 10px; // cards, panels and media
+$border-radius-lg: 12px; // page-level cards (the article)
 $focus-ring-width: 2px;
 
 // Code blocks

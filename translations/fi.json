@@ -42,6 +42,8 @@
   "follow_topic_description": "Käyttäjät voivat seurata tiettyä aihetta",
   "follow_topic_label": "Seuraa",
   "fonts_group_label": "Fontit",
+  "heading_color_description": "Otsikkoelementtien tekstin väri",
+  "heading_color_label": "Otsikon väri",
   "heading_font_description": "Otsikoiden fontti",
   "heading_font_label": "Otsikon fontti",
   "home_page_group_label": "Kotisivun elementit",

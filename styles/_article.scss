@@ -1,17 +1,28 @@
 /***** Article *****/
 .article {
   /*
-  * The article grid is defined this way to optimize readability:
-  * Sidebar | Content | Free space
-  * 17%     | 66%     | 17%
+  * The article is a card holding the readable column; the sidebar is a second
+  * card beside it. Below 1024px the sidebar stacks above the article, and the
+  * article flexes between 300px and the space the 260px sidebar leaves — about
+  * 620px to 1000px across the range of the 1300px shell — so no third
+  * breakpoint or magic percentage is needed.
   */
+  background-color: $surface-color;
+  border-radius: $border-radius-lg;
   flex: 1 0 auto; //Explicit values needed whith flex-direction: column for IE11
+  margin: 20px 0 0;
+  padding: 0 20px;
+
+  @include tablet {
+    margin: 40px 0 0;
+    padding: 0 30px;
+  }
 
   @include desktop {
-    flex: 1 0 66%;
-    max-width: 66%;
-    min-width: 640px;
-    padding: 0 30px;
+    flex: 1 1 700px;
+    margin: 40px 0;
+    max-width: 100%;
+    min-width: 300px;
   }
 
   &-container {
@@ -19,7 +30,9 @@
     flex-direction: column;
 
     @include desktop {
+      align-items: flex-start;
       flex-direction: row;
+      gap: 40px;
     }
   }
 
@@ -88,7 +101,7 @@
   }
 
   &-content {
-    line-height: 1.6;
+    line-height: 1.7;
     margin: 40px 0;
     word-wrap: break-word;
   }
@@ -116,17 +129,22 @@
   }
 
   &-sidebar {
-    border-bottom: 1px solid $low-contrast-border-color;
-    border-top: 1px solid $low-contrast-border-color;
+    background-color: $primary-shade;
+    border-radius: $border-radius-md;
     flex: 1 0 auto; //Explicit values needed whith flex-direction: column for IE11
-    margin-bottom: 20px;
-    padding: 0;
+    margin: 20px 0 0;
+    padding: 16px;
+
+    @include tablet {
+      margin: 40px 0 0;
+      padding: 20px;
+    }
 
     @include desktop {
-      border: 0;
-      flex: 0 0 17%;
+      flex: 0 0 260px;
       height: auto;
-      max-width: 17%;
+      margin: 40px 0;
+      max-width: 260px;
     }
   }
 

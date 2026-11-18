@@ -53,7 +53,7 @@
 
   [role="menuitem"],
   [role="menuitemradio"] {
-    color: #2f3941;
+    color: $text_color;
     cursor: pointer;
     display: block;
     padding: 7px 40px 7px 20px;
@@ -70,9 +70,9 @@
     }
     &:hover,
     &:focus {
-      background: rgba(31, 115, 183, 0.08);
+      background: $primary-shade;
       text-decoration: none;
-      color: #2f3941;
+      color: $text_color;
     }
 
     &[aria-selected="true"],

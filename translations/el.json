@@ -42,6 +42,8 @@
   "follow_topic_description": "Οι χρήστες μπορούν να παρακολουθούν ένα συγκεκριμένο θέμα",
   "follow_topic_label": "Παρακολούθηση",
   "fonts_group_label": "Γραμματοσειρές",
+  "heading_color_description": "Χρώμα κειμένου για επικεφαλίδες",
+  "heading_color_label": "Χρώμα επικεφαλίδων",
   "heading_font_description": "Γραμματοσειρά για επικεφαλίδες",
   "heading_font_label": "Γραμματοσειρά επικεφαλίδων",
   "home_page_group_label": "Στοιχεία αρχικής σελίδας",

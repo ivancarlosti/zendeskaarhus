@@ -42,6 +42,8 @@
   "follow_topic_description": "Gli utenti possono seguire un argomento specifico",
   "follow_topic_label": "Segui",
   "fonts_group_label": "Carattere",
+  "heading_color_description": "Colore del testo per i titoli",
+  "heading_color_label": "Colore dei titoli",
   "heading_font_description": "Carattere per intestazioni",
   "heading_font_label": "Carattere intestazione",
   "home_page_group_label": "Elementi home page",

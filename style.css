@@ -183,6 +183,7 @@ h3,
 h4,
 h5,
 h6 {
+  color: $heading_color;
   font-family: $heading_font;
   margin-top: 0;
 }
@@ -212,6 +213,7 @@ a:visited {
   color: $visited_link_color;
 }
 a:hover, a:active, a:focus {
+  color: $hover_link_color;
   text-decoration: underline;
 }
 
@@ -267,11 +269,11 @@ a:hover, a:active, a:focus {
 }
 
 .container {
-  max-width: 1160px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 5%;
 }
-@media (min-width: 1160px) {
+@media (min-width: 1300px) {
   .container {
     padding: 0;
     width: 90%;
@@ -290,11 +292,11 @@ ul {
 }
 
 .error-page {
-  max-width: 1160px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 5%;
 }
-@media (min-width: 1160px) {
+@media (min-width: 1300px) {
   .error-page {
     padding: 0;
     width: 90%;
@@ -603,11 +605,11 @@ ul {
   display: flex;
   height: 71px;
   justify-content: space-between;
-  max-width: 1160px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 5%;
 }
-@media (min-width: 1160px) {
+@media (min-width: 1300px) {
   .header {
     padding: 0;
     width: 90%;
@@ -684,6 +686,7 @@ ul {
 @media (min-width: 1024px) {
   .nav-wrapper-desktop {
     display: inline-block;
+    margin-top: 10px;
   }
 }
 .nav-wrapper-desktop a {
@@ -971,7 +974,7 @@ ul {
 /***** Footer *****/
 .footer {
   border-top: 1px solid #ddd;
-  margin-top: 60px;
+  margin-top: 30px;
   padding: 30px 0;
 }
 .footer a {
@@ -980,11 +983,11 @@ ul {
 .footer-inner {
   display: flex;
   justify-content: space-between;
-  max-width: 1160px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 5%;
 }
-@media (min-width: 1160px) {
+@media (min-width: 1300px) {
   .footer-inner {
     padding: 0;
     width: 90%;
@@ -1224,7 +1227,7 @@ ul {
   flex-wrap: wrap;
   gap: 15px 30px;
   justify-content: space-between;
-  margin-bottom: 55px;
+  margin-bottom: 30px;
 }
 @media (min-width: 768px) {
   .sub-nav {
@@ -1628,18 +1631,30 @@ ul {
 /***** Article *****/
 .article {
   /*
-  * The article grid is defined this way to optimize readability:
-  * Sidebar | Content | Free space
-  * 17%     | 66%     | 17%
+  * The article is a card holding the readable column; the sidebar is a second
+  * card beside it. Below 1024px the sidebar stacks above the article, and the
+  * article flexes between 300px and the space the 260px sidebar leaves — about
+  * 620px to 1000px across the range of the 1300px shell — so no third
+  * breakpoint or magic percentage is needed.
   */
+  background-color: lighten($background_color, 5%);
+  border-radius: 12px;
   flex: 1 0 auto;
+  margin: 20px 0 0;
+  padding: 0 20px;
+}
+@media (min-width: 768px) {
+  .article {
+    margin: 40px 0 0;
+    padding: 0 30px;
+  }
 }
 @media (min-width: 1024px) {
   .article {
-    flex: 1 0 66%;
-    max-width: 66%;
-    min-width: 640px;
-    padding: 0 30px;
+    flex: 1 1 700px;
+    margin: 40px 0;
+    max-width: 100%;
+    min-width: 300px;
   }
 }
 .article-container {
@@ -1648,7 +1663,9 @@ ul {
 }
 @media (min-width: 1024px) {
   .article-container {
+    align-items: flex-start;
     flex-direction: row;
+    gap: 40px;
   }
 }
 .article-header {
@@ -1721,6 +1738,32 @@ ul {
 .article-body table {
   margin: 0 0 20px;
 }
+.article-body table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  word-wrap: break-word;
+}
+.article-body th,
+.article-body td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+[dir=rtl] .article-body th,
+[dir=rtl] .article-body td {
+  text-align: right;
+}
+.article-body th {
+  background-color: $link_color;
+  color: $brand_text_color;
+  font-weight: 600;
+}
+.article-body th a,
+.article-body th a:visited {
+  color: $brand_text_color;
+  text-decoration: underline;
+}
 .article-body h1,
 .article-body h2,
 .article-body h3,
@@ -1736,6 +1779,8 @@ ul {
   margin-bottom: 0;
 }
 .article-body img {
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   height: auto;
   max-width: 100%;
 }
@@ -1759,8 +1804,10 @@ ul {
   margin-right: auto;
 }
 .article-body figure.image {
+  border: 1px solid #ddd;
   display: table;
   margin: 24px auto;
+  padding: 5px;
 }
 .article-body figure.image.image-style-align-left {
   float: left;
@@ -1779,12 +1826,18 @@ ul {
   margin-right: auto;
 }
 .article-body figure.image > img {
+  border-radius: 0;
+  box-shadow: none;
   display: block;
   width: 100%;
 }
+.article-body figure > p {
+  margin: 0;
+}
 .article-body figcaption {
-  padding: 10px 0;
-  font-size: 12px;
+  padding: 10px;
+  font-size: 13px;
+  font-style: italic;
   text-align: center;
   background-color: darken($background_color, 5%);
 }
@@ -1839,7 +1892,7 @@ ul {
   margin-bottom: 0;
 }
 .article-content {
-  line-height: 1.6;
+  line-height: 1.7;
   margin: 40px 0;
   word-wrap: break-word;
 }
@@ -1862,18 +1915,24 @@ ul {
   height: 18px;
 }
 .article-sidebar {
-  border-bottom: 1px solid #ddd;
-  border-top: 1px solid #ddd;
+  background-color: darken($background_color, 3%);
+  border-radius: 10px;
   flex: 1 0 auto;
-  margin-bottom: 20px;
-  padding: 0;
+  margin: 20px 0 0;
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .article-sidebar {
+    margin: 40px 0 0;
+    padding: 20px;
+  }
 }
 @media (min-width: 1024px) {
   .article-sidebar {
-    border: 0;
-    flex: 0 0 17%;
+    flex: 0 0 260px;
     height: auto;
-    max-width: 17%;
+    margin: 40px 0;
+    max-width: 260px;
   }
 }
 .article-relatives {
@@ -2211,6 +2270,32 @@ ul {
 .comment-body table {
   margin: 0 0 20px;
 }
+.comment-body table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  word-wrap: break-word;
+}
+.comment-body th,
+.comment-body td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+[dir=rtl] .comment-body th,
+[dir=rtl] .comment-body td {
+  text-align: right;
+}
+.comment-body th {
+  background-color: $link_color;
+  color: $brand_text_color;
+  font-weight: 600;
+}
+.comment-body th a,
+.comment-body th a:visited {
+  color: $brand_text_color;
+  text-decoration: underline;
+}
 .comment-body h1,
 .comment-body h2,
 .comment-body h3,
@@ -2226,6 +2311,8 @@ ul {
   margin-bottom: 0;
 }
 .comment-body img {
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   height: auto;
   max-width: 100%;
 }
@@ -2249,8 +2336,10 @@ ul {
   margin-right: auto;
 }
 .comment-body figure.image {
+  border: 1px solid #ddd;
   display: table;
   margin: 24px auto;
+  padding: 5px;
 }
 .comment-body figure.image.image-style-align-left {
   float: left;
@@ -2269,12 +2358,18 @@ ul {
   margin-right: auto;
 }
 .comment-body figure.image > img {
+  border-radius: 0;
+  box-shadow: none;
   display: block;
   width: 100%;
 }
+.comment-body figure > p {
+  margin: 0;
+}
 .comment-body figcaption {
-  padding: 10px 0;
-  font-size: 12px;
+  padding: 10px;
+  font-size: 13px;
+  font-style: italic;
   text-align: center;
   background-color: darken($background_color, 5%);
 }
@@ -2807,6 +2902,32 @@ ul {
 .post-body table {
   margin: 0 0 20px;
 }
+.post-body table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  word-wrap: break-word;
+}
+.post-body th,
+.post-body td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+[dir=rtl] .post-body th,
+[dir=rtl] .post-body td {
+  text-align: right;
+}
+.post-body th {
+  background-color: $link_color;
+  color: $brand_text_color;
+  font-weight: 600;
+}
+.post-body th a,
+.post-body th a:visited {
+  color: $brand_text_color;
+  text-decoration: underline;
+}
 .post-body h1,
 .post-body h2,
 .post-body h3,
@@ -2822,6 +2943,8 @@ ul {
   margin-bottom: 0;
 }
 .post-body img {
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   height: auto;
   max-width: 100%;
 }
@@ -2845,8 +2968,10 @@ ul {
   margin-right: auto;
 }
 .post-body figure.image {
+  border: 1px solid #ddd;
   display: table;
   margin: 24px auto;
+  padding: 5px;
 }
 .post-body figure.image.image-style-align-left {
   float: left;
@@ -2865,12 +2990,18 @@ ul {
   margin-right: auto;
 }
 .post-body figure.image > img {
+  border-radius: 0;
+  box-shadow: none;
   display: block;
   width: 100%;
 }
+.post-body figure > p {
+  margin: 0;
+}
 .post-body figcaption {
-  padding: 10px 0;
-  font-size: 12px;
+  padding: 10px;
+  font-size: 13px;
+  font-style: italic;
   text-align: center;
   background-color: darken($background_color, 5%);
 }
@@ -4421,7 +4552,7 @@ ul {
   padding-top: 4rem;
 }
 .search-results .no-results .headline {
-  color: #2F3941;
+  color: $text_color;
   font-weight: 400;
   font-size: 18px;
   line-height: 24px;
@@ -4701,7 +4832,7 @@ html[dir=rtl] .notification-left-aligned {
 }
 .dropdown-menu [role=menuitem],
 .dropdown-menu [role=menuitemradio] {
-  color: #2f3941;
+  color: $text_color;
   cursor: pointer;
   display: block;
   padding: 7px 40px 7px 20px;
@@ -4720,9 +4851,9 @@ html[dir=rtl] .notification-left-aligned {
 .dropdown-menu [role=menuitem]:hover, .dropdown-menu [role=menuitem]:focus,
 .dropdown-menu [role=menuitemradio]:hover,
 .dropdown-menu [role=menuitemradio]:focus {
-  background: rgba(31, 115, 183, 0.08);
+  background: darken($background_color, 3%);
   text-decoration: none;
-  color: #2f3941;
+  color: $text_color;
 }
 .dropdown-menu [role=menuitem][aria-selected=true], .dropdown-menu [role=menuitem][aria-checked=true],
 .dropdown-menu [role=menuitemradio][aria-selected=true],
@@ -4851,6 +4982,32 @@ zd-summary-block {
 .service-catalog-description table {
   margin: 0 0 20px;
 }
+.service-catalog-description table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  word-wrap: break-word;
+}
+.service-catalog-description th,
+.service-catalog-description td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+[dir=rtl] .service-catalog-description th,
+[dir=rtl] .service-catalog-description td {
+  text-align: right;
+}
+.service-catalog-description th {
+  background-color: $link_color;
+  color: $brand_text_color;
+  font-weight: 600;
+}
+.service-catalog-description th a,
+.service-catalog-description th a:visited {
+  color: $brand_text_color;
+  text-decoration: underline;
+}
 .service-catalog-description h1,
 .service-catalog-description h2,
 .service-catalog-description h3,
@@ -4866,6 +5023,8 @@ zd-summary-block {
   margin-bottom: 0;
 }
 .service-catalog-description img {
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   height: auto;
   max-width: 100%;
 }
@@ -4889,8 +5048,10 @@ zd-summary-block {
   margin-right: auto;
 }
 .service-catalog-description figure.image {
+  border: 1px solid #ddd;
   display: table;
   margin: 24px auto;
+  padding: 5px;
 }
 .service-catalog-description figure.image.image-style-align-left {
   float: left;
@@ -4909,12 +5070,18 @@ zd-summary-block {
   margin-right: auto;
 }
 .service-catalog-description figure.image > img {
+  border-radius: 0;
+  box-shadow: none;
   display: block;
   width: 100%;
 }
+.service-catalog-description figure > p {
+  margin: 0;
+}
 .service-catalog-description figcaption {
-  padding: 10px 0;
-  font-size: 12px;
+  padding: 10px;
+  font-size: 13px;
+  font-style: italic;
   text-align: center;
   background-color: darken($background_color, 5%);
 }
@@ -4999,7 +5166,7 @@ zd-summary-block {
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
-  max-height: var(--code-block-max-height, 32rem);
+  max-height: var(--code-block-max-height, 24rem);
   overflow: auto;
   overscroll-behavior-x: contain;
   padding: 16px 56px 16px 16px;

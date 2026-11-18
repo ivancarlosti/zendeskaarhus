@@ -42,6 +42,8 @@
   "follow_topic_description": "Người dùng có thể theo dõi một chủ đề cụ thể",
   "follow_topic_label": "Theo dõi",
   "fonts_group_label": "Phông chữ",
+  "heading_color_description": "Màu chữ của các tiêu đề",
+  "heading_color_label": "Màu tiêu đề",
   "heading_font_description": "Phông chữ cho đầu đề",
   "heading_font_label": "Phông chữ đầu đề",
   "home_page_group_label": "Các phần tử của trang chủ",

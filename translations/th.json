@@ -42,6 +42,8 @@
   "follow_topic_description": "ผู้ใช้สามารถติดตามหัวข้อที่เฉพาะเจาะจงได้",
   "follow_topic_label": "ติดตาม",
   "fonts_group_label": "ฟอนต์",
+  "heading_color_description": "สีข้อความขององค์ประกอบหัวข้อ",
+  "heading_color_label": "สีของหัวข้อ",
   "heading_font_description": "ฟอนต์สำหรับส่วนหัว",
   "heading_font_label": "ฟอนต์ส่วนหัว",
   "home_page_group_label": "องค์ประกอบของหน้าหลัก",

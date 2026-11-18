@@ -42,6 +42,8 @@
   "follow_topic_description": "Les utilisateurs peuvent s’abonner à un sujet en particulier",
   "follow_topic_label": "S’abonner",
   "fonts_group_label": "Polices",
+  "heading_color_description": "Couleur du texte pour les éléments de titre",
+  "heading_color_label": "Couleur des titres",
   "heading_font_description": "Police pour les titres",
   "heading_font_label": "Police des titres",
   "home_page_group_label": "Éléments de la page d’accueil",

@@ -42,6 +42,8 @@
   "follow_topic_description": "Uživatelé mohou sledovat určité téma.",
   "follow_topic_label": "Sledovat",
   "fonts_group_label": "Písma",
+  "heading_color_description": "Barva textu nadpisů",
+  "heading_color_label": "Barva nadpisů",
   "heading_font_description": "Písma pro nadpisy",
   "heading_font_label": "Písmo nadpisu",
   "home_page_group_label": "Elementy domovské stránky",

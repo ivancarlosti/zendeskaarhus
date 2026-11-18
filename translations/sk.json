@@ -42,6 +42,8 @@
   "follow_topic_description": "Používatelia môžu sledovať konkrétnu tému",
   "follow_topic_label": "Sledovať",
   "fonts_group_label": "Písma",
+  "heading_color_description": "Farba textu nadpisov",
+  "heading_color_label": "Farba nadpisov",
   "heading_font_description": "Písmo pre hlavičky",
   "heading_font_label": "Písmo hlavičky",
   "home_page_group_label": "Prvky domovskej stránky",

@@ -42,6 +42,8 @@
   "follow_topic_description": "Użytkownicy mogą obserwować wybrany temat",
   "follow_topic_label": "Obserwuj",
   "fonts_group_label": "Czcionki",
+  "heading_color_description": "Kolor tekstu elementów nagłówka",
+  "heading_color_label": "Kolor nagłówków",
   "heading_font_description": "Czcionka nagłówków",
   "heading_font_label": "Czcionka nagłówków",
   "home_page_group_label": "Elementy strony głównej",

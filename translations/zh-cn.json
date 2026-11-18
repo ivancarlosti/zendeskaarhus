@@ -42,6 +42,8 @@
   "follow_topic_description": "用户可关注特定的主题",
   "follow_topic_label": "关注",
   "fonts_group_label": "字体",
+  "heading_color_description": "标题元素的文本颜色",
+  "heading_color_label": "标题颜色",
   "heading_font_description": "标题字体",
   "heading_font_label": "标题字体",
   "home_page_group_label": "主页页面元素",

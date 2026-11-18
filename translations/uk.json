@@ -42,6 +42,8 @@
   "follow_topic_description": "Користувачі можуть стежити за певною тематикою",
   "follow_topic_label": "Читати",
   "fonts_group_label": "Шрифти",
+  "heading_color_description": "Колір тексту заголовків",
+  "heading_color_label": "Колір заголовків",
   "heading_font_description": "Шрифт для заголовків",
   "heading_font_label": "Шрифт заголовка",
   "home_page_group_label": "Елементи головної сторінки",

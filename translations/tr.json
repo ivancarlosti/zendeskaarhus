@@ -42,6 +42,8 @@
   "follow_topic_description": "Kullanıcılar belirli bir konu başlığını takip edebilir",
   "follow_topic_label": "Takip",
   "fonts_group_label": "Yazı tipleri",
+  "heading_color_description": "Başlık öğelerinin metin rengi",
+  "heading_color_label": "Başlık rengi",
   "heading_font_description": "Başlıklar için yazı tipi",
   "heading_font_label": "Başlık Yazı Tipi",
   "home_page_group_label": "Ana sayfa öğeleri",

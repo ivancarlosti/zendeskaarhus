@@ -42,6 +42,8 @@
   "follow_topic_description": "Benutzer können einem bestimmten Thema folgen",
   "follow_topic_label": "Folgen",
   "fonts_group_label": "Schriftarten",
+  "heading_color_description": "Textfarbe für Überschriften",
+  "heading_color_label": "Überschriftenfarbe",
   "heading_font_description": "Schriftart für Überschriften",
   "heading_font_label": "Schriftart für Überschriften",
   "home_page_group_label": "Elemente auf Homepage",

@@ -75,7 +75,7 @@ $header-height: 71px;
 .nav-wrapper-desktop {
   @include mobile { display: none; }
   @include tablet { display: none; }
-  @include desktop { display: inline-block; }
+  @include desktop { display: inline-block; margin-top: 10px; }
 
   a {
     border: 0;

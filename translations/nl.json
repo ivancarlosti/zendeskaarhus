@@ -42,6 +42,8 @@
   "follow_topic_description": "Gebruikers kunnen een bepaald onderwerp volgen",
   "follow_topic_label": "Volgen",
   "fonts_group_label": "Lettertypen",
+  "heading_color_description": "Tekstkleur voor koppen",
+  "heading_color_label": "Kleur van koppen",
   "heading_font_description": "Lettertype voor kopteksten",
   "heading_font_label": "Lettertype voor kopteksten",
   "home_page_group_label": "Elementen van startpagina",

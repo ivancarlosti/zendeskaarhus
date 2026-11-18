@@ -42,6 +42,8 @@
   "follow_topic_description": "Brugere kan følge et specifikt emne",
   "follow_topic_label": "Følg",
   "fonts_group_label": "Skrifttyper",
+  "heading_color_description": "Tekstfarve til overskrifter",
+  "heading_color_label": "Overskriftsfarve",
   "heading_font_description": "Skrifttype til overskrifter",
   "heading_font_label": "Overskriftsskrifttype",
   "home_page_group_label": "Startsideelementer",

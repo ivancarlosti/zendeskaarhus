@@ -24,6 +24,7 @@ h3,
 h4,
 h5,
 h6 {
+  color: $heading_color;
   font-family: $heading_font;
   margin-top: 0;
 }
@@ -56,6 +57,7 @@ a {
   &:hover,
   &:active,
   &:focus {
+    color: $hover_link_color;
     text-decoration: underline;
   }
 }

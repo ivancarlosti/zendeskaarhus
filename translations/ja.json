@@ -42,6 +42,8 @@
   "follow_topic_description": "ユーザーは特定のトピックのフォローができます",
   "follow_topic_label": "フォローする",
   "fonts_group_label": "フォント",
+  "heading_color_description": "見出し要素のテキストの色",
+  "heading_color_label": "見出しの色",
   "heading_font_description": "ヘッダーのフォント",
   "heading_font_label": "ヘッダーフォント",
   "home_page_group_label": "ホームページの要素",

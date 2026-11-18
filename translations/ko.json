@@ -42,6 +42,8 @@
   "follow_topic_description": "사용자가 특정 주제를 팔로우할 수 있음",
   "follow_topic_label": "팔로우",
   "fonts_group_label": "글꼴",
+  "heading_color_description": "제목 요소의 텍스트 색상",
+  "heading_color_label": "제목 색상",
   "heading_font_description": "머리글의 글꼴",
   "heading_font_label": "머리글 글꼴",
   "home_page_group_label": "홈 페이지 요소",

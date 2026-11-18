@@ -42,6 +42,8 @@
   "follow_topic_description": "يمكن للمستخدمين متابعة موضوع معين",
   "follow_topic_label": "تابع",
   "fonts_group_label": "الخطوط",
+  "heading_color_description": "لون نص عناصر العنوان",
+  "heading_color_label": "لون العناوين",
   "heading_font_description": "خط العناوين",
   "heading_font_label": "خط العناوين",
   "home_page_group_label": "عناصر الصفحة الرئيسية",

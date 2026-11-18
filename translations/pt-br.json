@@ -43,6 +43,8 @@
   "follow_topic_description": "Os usuários podem seguir um tópico específico",
   "follow_topic_label": "Seguir",
   "fonts_group_label": "Fontes",
+  "heading_color_description": "Cor do texto dos elementos de cabeçalho",
+  "heading_color_label": "Cor dos cabeçalhos",
   "heading_font_description": "Fonte para os cabeçalhos",
   "heading_font_label": "Fonte do cabeçalho",
   "home_page_group_label": "Elementos da página inicial",

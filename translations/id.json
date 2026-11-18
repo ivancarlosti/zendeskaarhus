@@ -42,6 +42,8 @@
   "follow_topic_description": "Pengguna dapat mengikuti topik spesifik",
   "follow_topic_label": "Ikuti",
   "fonts_group_label": "Font",
+  "heading_color_description": "Warna teks untuk elemen judul",
+  "heading_color_label": "Warna judul",
   "heading_font_description": "Font untuk judul",
   "heading_font_label": "Font Judul",
   "home_page_group_label": "Elemen halaman beranda",
