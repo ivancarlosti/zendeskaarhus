@@ -49,7 +49,9 @@ testes e os gates de `build/validate.py` verdes.
    `src/is-empty.js`, inspecionando a marcação como texto (sem `DOMParser`), com
    `src/is-empty.spec.js` cobrindo os casos do editor; rebuildar `script.js`.
 4. `package.json`: `overrides` de `minimatch@>=7.0.0 <11.0.1` para `11.0.9`
-   (última estável) e `npm install` para atualizar o lockfile.
+   (última estável) e de `glob@^10.0.0` para `14.0.2`, porque o `glob` 10 fala
+   a API do `minimatch` 9 e passa a devolver zero correspondências com o 11;
+   `npm install` para atualizar o lockfile.
 5. Validar cada lote: `npm test`, `npm run typecheck`, `npm run build`,
    `npm run validate`, smoke test do `zcli`, `npm audit`.
 6. Push e re-checagem dos alertas no GitHub após a análise do CodeQL.
@@ -59,10 +61,16 @@ testes e os gates de `build/validate.py` verdes.
 - **CodeQL pode re-apontar outro trecho** do mesmo template do shim: nesse caso,
   o header wasm é embutido como literal fixo no texto gerado (sem interpolação)
   e o escaping de URL vira um helper `escapeJsString` explícito.
-- **`minimatch` 11 forçado em `glob@13`/Jest**: APIs são compatíveis
-  (`minimatch` continua exportando a função e `Minimatch` em CJS), mas a suíte e
-  o `zcli` são o teste real; fallback é restringir os overrides aos pacotes do
-  Jest e/ou atualizar `glob`.
+- **`minimatch` 11 forçado em `glob@10`/`glob@13`**: foi o primeiro efeito
+  colateral encontrado — o `glob@10` do `@zendesk/zcli-themes` (e do
+  `test-exclude` do Jest) usa a API do `minimatch` 9 e, com o 11, passa a
+  devolver zero arquivos silenciosamente. Por isso o `glob@^10` também é
+  sobrescrito para `14.0.2`, que já depende de `minimatch@^11` e mantém a API
+  usada pelos dois consumidores (`globSync`/`glob.sync` com `posix`, `ignore`,
+  `dot`).
+  Verificação: `getTemplates()` do zcli encontra os 25 templates,
+  `TestExclude.globSync()` lista os arquivos do projeto e a cobertura do Jest
+  funciona.
 - **Divergência do vendor**: os patches locais precisam ser reaplicados ao subir
   a versão do es-module-shims (documentado no header e em `docs/licensing.md`).
 - **Fora do escopo**: advisories de desenvolvimento sem correção disponível na
