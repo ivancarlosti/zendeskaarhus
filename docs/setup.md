@@ -18,6 +18,20 @@ npm ci            # or `npm install` to refresh the lockfile
 
 `npm ci` uses `package-lock.json` and is the reproducible path used by CI.
 
+### Dependency overrides
+
+`package.json` pins two transitive ranges via `overrides`, because the affected
+packages sit under `@zendesk/zcli` and Jest and cannot be bumped directly:
+
+| Override | Why |
+| --- | --- |
+| `minimatch@>=7.0.0 <11.0.1` → `11.0.9` | `GHSA-g3hv-75wg-m249` (ReDoS) is only patched in 11.0.1+; nothing in the tree calls the removed 9.x API |
+| `glob@^10.0.0` → `14.0.2` | `glob` 10 drives `minimatch` 9 and silently returns no matches with `minimatch` 11; 14.0.2 already depends on `minimatch@^11` and keeps `globSync`/`glob.sync`, `posix`, `ignore` and `dot` |
+
+Both `@zendesk/zcli-themes` (`getTemplates`) and Jest's `test-exclude` use only
+that API surface, so the overrides are safe; review them when bumping `jest` or
+`@zendesk/zcli`, and drop an override once upstream depends on the fixed range.
+
 ## Build
 
 ```bash
