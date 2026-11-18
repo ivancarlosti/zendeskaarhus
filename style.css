@@ -213,7 +213,6 @@ a:visited {
   color: $visited_link_color;
 }
 a:hover, a:active, a:focus {
-  color: $hover_link_color;
   text-decoration: underline;
 }
 
