@@ -1784,7 +1784,7 @@ ul {
   max-width: 100%;
 }
 .article-body p > img {
-  margin: 12px 0;
+  margin: 0px 0;
 }
 .article-body p > img.image-style-align-left {
   float: left;
@@ -2316,7 +2316,7 @@ ul {
   max-width: 100%;
 }
 .comment-body p > img {
-  margin: 12px 0;
+  margin: 0px 0;
 }
 .comment-body p > img.image-style-align-left {
   float: left;
@@ -2948,7 +2948,7 @@ ul {
   max-width: 100%;
 }
 .post-body p > img {
-  margin: 12px 0;
+  margin: 0px 0;
 }
 .post-body p > img.image-style-align-left {
   float: left;
@@ -5028,7 +5028,7 @@ zd-summary-block {
   max-width: 100%;
 }
 .service-catalog-description p > img {
-  margin: 12px 0;
+  margin: 0px 0;
 }
 .service-catalog-description p > img.image-style-align-left {
   float: left;
