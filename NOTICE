@@ -56,5 +56,6 @@ Modifications made by Aarhus:
 Third-party components bundled into assets/*.js keep their own licenses:
 DOMPurify (Apache-2.0 / MPL-2.0), regenerator-runtime (MIT), CKEditor 5
 (GPL-2.0-or-later, consumed through @zendesk/help-center-wysiwyg), Zendesk
-Garden (Apache-2.0) and React (MIT). The build preserves the license banners of
+Garden (Apache-2.0), React (MIT) and the vendored es-module-shims 2.8.4 (MIT,
+`LICENSES/es-module-shims-MIT.txt`). The build preserves the license banners of
 the minified bundles.

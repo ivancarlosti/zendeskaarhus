@@ -1,4 +1,17 @@
 /** ES Module Shims @version 2.8.4 */
+/*
+ * Vendored from es-module-shims 2.8.4 (MIT, Copyright Guy Bedford); the licence
+ * text ships in LICENSES/es-module-shims-MIT.txt. Local patches, not upstream:
+ *
+ *   1. `escapeJsString` escapes backslashes, quotes and line terminators
+ *      before a value is embedded in the module source this shim generates
+ *      (js/incomplete-sanitization).
+ *   2. The wasm feature-test script embeds the wasm header as pre-serialised
+ *      source text instead of calling `JSON.stringify`, which escapes strings
+ *      and not code (js/bad-code-sanitization).
+ *
+ * Re-apply both patches when bumping the vendored version.
+ */
 (function () {
 
   const self_ = typeof globalThis !== 'undefined' ? globalThis : self;
@@ -519,6 +532,11 @@
   let supportsMultipleImportMaps = false;
 
   const wasmBytes = [0, 97, 115, 109, 1, 0, 0, 0];
+  // The feature-detection script below runs inside a sandboxed iframe and cannot
+  // reach this scope, so the header travels as source text. Serialising it here
+  // keeps `JSON.stringify` out of the code-construction path: it escapes data,
+  // not code, and CodeQL models it as an improper sanitiser.
+  const wasmBytesLiteral = `[${wasmBytes.join(', ')}]`;
 
   let featureDetectionPromise = (async function () {
     // In shim mode, feature detection results are unused — skip the iframe overhead
@@ -578,7 +596,7 @@
       supportsImportMaps && jsonModulesEnabled ? `c(b(\`import"\${b('{}','text/json')}"with{type:"json"}\`))` : 'false'
     };sp=${
       supportsImportMaps && wasmSourcePhaseEnabled ?
-        `c(b(\`import source x from "\${b(new Uint8Array(${JSON.stringify(wasmBytes)}),'application/wasm')\}"\`))`
+        `c(b(\`import source x from "\${b(new Uint8Array(${wasmBytesLiteral}),'application/wasm')\}"\`))`
       : 'false'
     };Promise.all([${supportsImportMaps ? 'true' : "c('x')"},${supportsImportMaps ? "c('y')" : false},cm,${
       supportsImportMaps && cssModulesEnabled ?
@@ -586,7 +604,7 @@
       : 'false'
     },sp,${
       supportsImportMaps && wasmInstancePhaseEnabled ?
-        `${wasmSourcePhaseEnabled ? 'sp.then(s=>s?' : ''}c(b(\`import"\${b(new Uint8Array(${JSON.stringify(wasmBytes)}),'application/wasm')\}"\`))${wasmSourcePhaseEnabled ? ':false)' : ''}`
+        `${wasmSourcePhaseEnabled ? 'sp.then(s=>s?' : ''}c(b(\`import"\${b(new Uint8Array(${wasmBytesLiteral}),'application/wasm')\}"\`))${wasmSourcePhaseEnabled ? ':false)' : ''}`
       : 'false'
     }]).then(a=>parent.postMessage(['${msgTag}'].concat(a),'*'))<${''}/script>`;
 
@@ -913,7 +931,19 @@
     }
   };
 
-  const urlJsString = url => `'${url.replace(/'/g, "\\'")}'`;
+  // Escapes a value for a single-quoted JavaScript string literal: backslashes
+  // first, then quotes and line terminators, which would otherwise end the
+  // literal early in the module source this shim generates.
+  const escapeJsString = value =>
+    value
+      .replace(/\\/g, '\\\\')
+      .replace(/'/g, "\\'")
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\u2028/g, '\\u2028')
+      .replace(/\u2029/g, '\\u2029');
+
+  const urlJsString = url => `'${escapeJsString(url)}'`;
 
   let resolvedSource, lastIndex;
   const pushStringTo = (load, originalIndex, dynamicImportEndStack) => {
