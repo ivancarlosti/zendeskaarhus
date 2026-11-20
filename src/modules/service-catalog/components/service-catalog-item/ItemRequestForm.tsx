@@ -293,8 +293,13 @@ export function ItemRequestForm({
       return null;
     }
 
+    // `standard::position_in_portal` is nullable: when the attachment option
+    // has no position configured, fall back to the end of the form so the
+    // field is still rendered (otherwise a required attachment becomes
+    // impossible to upload).
     const attachmentsPosition =
-      attachmentsOption?.custom_object_fields?.["standard::position_in_portal"];
+      attachmentsOption?.custom_object_fields?.["standard::position_in_portal"] ??
+      requestFields.length;
 
     const attachmentsElement = attachmentsOption ? (
       <Attachments

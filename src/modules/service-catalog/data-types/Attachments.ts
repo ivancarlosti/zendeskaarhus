@@ -20,7 +20,8 @@ export interface CustomObjectFields {
   "standard::brand_id": number;
   "standard::description": string | null;
   "standard::is_required": boolean;
-  "standard::position_in_portal": number;
+  // Null when no position has been configured for the attachment option.
+  "standard::position_in_portal": number | null;
 }
 
 export type AttachmentsError = string | null;
